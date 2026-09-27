@@ -21,7 +21,7 @@
 </div>
 
 > [!IMPORTANT]
-> This repository is a derivative of [SecRandom](https://github.com/SECTL/SecRandom), maintained by **Li Junjian (@mathfosh)**.
+> This repository is a derivative of [SecRandom](https://github.com/SECTL/SecRandom).
 > The original project is developed by SECTL, authored by 黎泽懿_Aionflux, and licensed under GNU GPLv3.
 > This build removes telemetry, lottery, and update features.
 

@@ -21,7 +21,7 @@
 </div>
 
 > [!IMPORTANT]
-> 本リポジトリは [SecRandom](https://github.com/SECTL/SecRandom) の派生版で、**李骏健（@mathfosh）** が保守しています。
+> 本リポジトリは [SecRandom](https://github.com/SECTL/SecRandom) の派生版です。
 > オリジナルは SECTL が開発し、作者は 黎泽懿_Aionflux です。ライセンスは GNU GPLv3 です。
 > 本ビルドではテレメトリ、抽選会、更新機能を削除しています。
 

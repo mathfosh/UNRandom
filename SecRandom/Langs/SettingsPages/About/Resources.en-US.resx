@@ -55,10 +55,10 @@
         <value>SecRandom's Affiliated Organization</value>
     </data>
   <data name="S_Fork_Maintainer" xml:space="preserve">
-    <value>This build maintained by</value>
+    <value>About this build</value>
   </data>
   <data name="S_Fork_Maintainer_D" xml:space="preserve">
-    <value>Derived from SecRandom, maintained by 李骏健</value>
+    <value>A derivative build based on SecRandom</value>
   </data>
     <data name="S_App_License" xml:space="preserve">
         <value>Program License</value>

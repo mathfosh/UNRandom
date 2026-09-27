@@ -58,10 +58,10 @@
         <value>SecRandom 所属组织</value>
     </data>
   <data name="S_Fork_Maintainer" xml:space="preserve">
-    <value>本版本维护者</value>
+    <value>本版本说明</value>
   </data>
   <data name="S_Fork_Maintainer_D" xml:space="preserve">
-    <value>基于 SecRandom 修改，由 李骏健 维护</value>
+    <value>基于 SecRandom 修改的衍生版本</value>
   </data>
     <data name="S_App_License" xml:space="preserve">
         <value>应用协议</value>
