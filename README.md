@@ -1,12 +1,8 @@
 
-# SecRandom
+# UNRandom
 
 **基于动态权重的公平随机工具，让抽取与决策告别争议**
-
-[![最后更新](https://img.shields.io/github/last-commit/SECTL/SecRandom?style=for-the-badge&color=00b4ab&label=最后更新时间)](https://github.com/SECTL/SecRandom/commits/master)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](LICENSE)
-
-**语言** [ **简体中文** | [English](resources/README_EN.md) | [日本語](resources/README_JA.md) ]
 
 </div>
 
@@ -45,12 +41,6 @@ SecRandom 是面向课堂、团队、活动、决策等场景的公平抽取应�
 - 备份可以包含名单、历史、抽取证明、图片、音频等信息，但不会包含密码等安全信息
 - 支持使用密码、TOTP或 U 盘保护重要操作，并可设置哪些操作需要验证
 
-### 验证边界
-
-| 模式 | 可以做到 | 不能证明 |
-|---|---|---|
-| 离线证明 | 复查已完成的抽取过程 | 不是抽取前的服务器见证；不能证明本地程序或现实名单未被篡改 |
-| 在线见证 | 保护服务端锁定后的抽取流程 | 不能证明名单真实、完整，或提交前未被筛选 |
 
 ## 技术演进
 
