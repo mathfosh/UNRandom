@@ -61,25 +61,25 @@
         <value>导出设置</value>
     </data>
     <data name="C_MoreOptions_ExportSettings_D" xml:space="preserve">
-        <value>将当前设置导出为 UNrandom v3 配置文件，用于备份和迁移</value>
+        <value>将当前设置导出为 UNRandom v3 配置文件，用于备份和迁移</value>
     </data>
     <data name="C_MoreOptions_ImportSettings" xml:space="preserve">
         <value>导入设置</value>
     </data>
     <data name="C_MoreOptions_ImportSettings_D" xml:space="preserve">
-        <value>仅从 UNrandom v3 配置文件导入设置，覆盖当前配置信息</value>
+        <value>仅从 UNRandom v3 配置文件导入设置，覆盖当前配置信息</value>
     </data>
     <data name="C_MoreOptions_ExportAllData" xml:space="preserve">
         <value>导出所有数据</value>
     </data>
     <data name="C_MoreOptions_ExportAllData_D" xml:space="preserve">
-        <value>立即导出 UNrandom v3 全部非凭据数据和设置</value>
+        <value>立即导出 UNRandom v3 全部非凭据数据和设置</value>
     </data>
     <data name="C_MoreOptions_ImportAllData" xml:space="preserve">
         <value>导入所有数据</value>
     </data>
     <data name="C_MoreOptions_ImportAllData_D" xml:space="preserve">
-        <value>仅从 UNrandom v3 备份导入全部数据，导入前自动创建恢复快照</value>
+        <value>仅从 UNRandom v3 备份导入全部数据，导入前自动创建恢复快照</value>
     </data>
     <data name="C_MoreOptions_OpenLogDirectory" xml:space="preserve">
         <value>打开日志目录</value>
@@ -148,7 +148,7 @@
         <value>不支持的导入文件</value>
     </data>
     <data name="M_ImportUnsupportedContent" xml:space="preserve">
-        <value>该文件不是受支持的 UNrandom v3 导出文件</value>
+        <value>该文件不是受支持的 UNRandom v3 导出文件</value>
     </data>
     <data name="M_ImportUnsupportedUnknownVersion" xml:space="preserve">
         <value>未识别</value>
@@ -191,7 +191,7 @@
   <data name="C_TransferQuickQrTitle" xml:space="preserve"><value>扫码快速传输</value></data>
   <data name="C_TransferOfflineQrTitle" xml:space="preserve"><value>无网二维码传输</value></data>
   <data name="C_TransferSessionCodeTitle" xml:space="preserve"><value>会话码传输</value></data>
-  <data name="C_TransferPortalHint" xml:space="preserve"><value>在其它设备中扫码，或打开 UNrandom Sync 接收传输</value></data>
+  <data name="C_TransferPortalHint" xml:space="preserve"><value>在其它设备中扫码，或打开 UNRandom Sync 接收传输</value></data>
   <data name="C_TransferStatusFrames" xml:space="preserve"><value>第 {0} / {1} 帧</value></data>
   <data name="C_TransferStatusReady" xml:space="preserve"><value>准备接收传输</value></data>
   <data name="C_TransferStatusReceiving" xml:space="preserve"><value>正在接收传输</value></data>

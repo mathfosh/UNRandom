@@ -243,7 +243,7 @@
         <value>モバイル版のバックアップと復元は、システムのファイルアクセス権限を伴う完全なトランザクションが提供され次第公開されます。</value>
     </data>
     <data name="M_AboutLicense" xml:space="preserve">
-        <value>UNrandom はイベントや組織の場面向けの公平な抽選ツールで、GPLv3 ライセンスで公開されています。</value>
+        <value>UNRandom はイベントや組織の場面向けの公平な抽選ツールで、GPLv3 ライセンスで公開されています。</value>
     </data>
     <data name="C_Back" xml:space="preserve">
         <value>設定に戻る</value>
@@ -429,7 +429,7 @@
         <value>設定をインポート</value>
     </data>
     <data name="M_BackupPickerHint" xml:space="preserve">
-        <value>システムのファイルピッカーでエクスポートとインポートを行います。インポート前に UNrandom v3 形式を検証し、サポートされていないファイルはデータを一切変更しません。</value>
+        <value>システムのファイルピッカーでエクスポートとインポートを行います。インポート前に UNRandom v3 形式を検証し、サポートされていないファイルはデータを一切変更しません。</value>
     </data>
     <data name="S_AllData" xml:space="preserve">
         <value>すべてのデータ</value>
@@ -450,7 +450,7 @@
         <value>全データのバックアップを保存</value>
     </data>
     <data name="M_DataArchiveFileType" xml:space="preserve">
-        <value>UNrandom データアーカイブ</value>
+        <value>UNRandom データアーカイブ</value>
     </data>
     <data name="M_ExportCancelled" xml:space="preserve">
         <value>エクスポートをキャンセルしました。</value>
@@ -471,7 +471,7 @@
         <value>設定のバックアップを保存</value>
     </data>
     <data name="M_SettingsFileType" xml:space="preserve">
-        <value>UNrandom 設定ファイル</value>
+        <value>UNRandom 設定ファイル</value>
     </data>
     <data name="M_SettingsExported" xml:space="preserve">
         <value>設定を選択した場所にエクスポートしました。</value>
@@ -498,7 +498,7 @@
         <value>検証に合格しました。確認するとインポートを開始します。</value>
     </data>
     <data name="M_ValidationUnsupported" xml:space="preserve">
-        <value>このファイルはサポートされている UNrandom v3 のエクスポートではないため、インポートできません。</value>
+        <value>このファイルはサポートされている UNRandom v3 のエクスポートではないため、インポートできません。</value>
     </data>
     <data name="M_ReadOrValidateFailed" xml:space="preserve">
         <value>読み込みまたは検証に失敗しました：{0}</value>

@@ -16,7 +16,7 @@
                     <ComboBoxItem>555</ComboBoxItem>
                 </ComboBox>
 
-                <TextBlock>UNrandom.Core:</TextBlock>
+                <TextBlock>UNRandom.Core:</TextBlock>
                 <sr:MultiComboBox Width="200">
                     <sr:MultiComboBoxItem>111</sr:MultiComboBoxItem>
                     <sr:MultiComboBoxItem>222</sr:MultiComboBoxItem>

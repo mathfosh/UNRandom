@@ -179,8 +179,8 @@ jobs:
               foreach ($file in @(
                 (Join-Path $fullRoot 'SecRandomLauncher.exe'),
                 (Join-Path $lightRoot 'SecRandomLauncher.exe'),
-                (Join-Path $fullApp 'UNrandom.Desktop.exe'),
-                (Join-Path $lightApp 'UNrandom.Desktop.exe')
+                (Join-Path $fullApp 'UNRandom.Desktop.exe'),
+                (Join-Path $lightApp 'UNRandom.Desktop.exe')
               )) {
                 Sign-File $file $signTool $certificatePath
               }
@@ -287,10 +287,10 @@ jobs:
               if (-not [string]::IsNullOrWhiteSpace($env:WINDOWS_CODESIGN_TIMESTAMP_URL)) {
                 $arguments += @('/tr', $env:WINDOWS_CODESIGN_TIMESTAMP_URL, '/td', 'SHA256')
               }
-              $arguments += "$outDir/UNrandom.Desktop.exe"
+              $arguments += "$outDir/UNRandom.Desktop.exe"
               & $signTool @arguments
               if ($LASTEXITCODE -ne 0) { throw "signtool failed with exit code $LASTEXITCODE." }
-              & $signTool verify /pa /v "$outDir/UNrandom.Desktop.exe"
+              & $signTool verify /pa /v "$outDir/UNRandom.Desktop.exe"
               if ($LASTEXITCODE -ne 0) { throw "signtool verification failed with exit code $LASTEXITCODE." }
             }
             finally {
@@ -356,11 +356,11 @@ jobs:
 
           cp -a "${release_root}/publish/full/${RID}/." "$pkgroot/usr/lib/secrandom/"
           printf '{"schemaVersion":1,"product":"SecRandom","rid":"%s","packageKind":"linux-deb","runtimeKind":"self-contained"}\n' "$RID" > "$pkgroot/usr/lib/secrandom/SecRandom.package.json"
-          chmod +x "$pkgroot/usr/lib/secrandom/UNrandom.Desktop" || true
+          chmod +x "$pkgroot/usr/lib/secrandom/UNRandom.Desktop" || true
 
           cat > "$pkgroot/usr/bin/secrandom" << 'EOF'
           #!/bin/sh
-          exec /usr/lib/secrandom/UNrandom.Desktop "$@"
+          exec /usr/lib/secrandom/UNRandom.Desktop "$@"
           EOF
           chmod +x "$pkgroot/usr/bin/secrandom"
 
@@ -418,7 +418,7 @@ jobs:
 
           cp -a "${release_root}/publish/full/${RID}/." "$work/bundle/SecRandom.app/Contents/MacOS/"
           printf '{"schemaVersion":1,"product":"SecRandom","rid":"%s","packageKind":"macos-app","runtimeKind":"self-contained"}\n' "$RID" > "$work/bundle/SecRandom.app/Contents/MacOS/SecRandom.package.json"
-          chmod +x "$work/bundle/SecRandom.app/Contents/MacOS/UNrandom.Desktop" || true
+          chmod +x "$work/bundle/SecRandom.app/Contents/MacOS/UNRandom.Desktop" || true
 
           cat > "$work/bundle/SecRandom.app/Contents/Info.plist" << EOF
           <?xml version="1.0" encoding="UTF-8"?>
@@ -430,7 +430,7 @@ jobs:
             <key>CFBundleIdentifier</key><string>top.sectl.secrandom</string>
             <key>CFBundleVersion</key><string>${version_no_v}</string>
             <key>CFBundleShortVersionString</key><string>${version_no_v}</string>
-            <key>CFBundleExecutable</key><string>UNrandom.Desktop</string>
+            <key>CFBundleExecutable</key><string>UNRandom.Desktop</string>
             <key>CFBundlePackageType</key><string>APPL</string>
             <key>LSMinimumSystemVersion</key><string>11.0</string>
             <key>CFBundleIconFile</key><string>AppIcon</string>

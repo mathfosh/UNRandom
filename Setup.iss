@@ -3,13 +3,13 @@
 ; Non-commercial use only
 
 #ifndef MyAppName
-#define MyAppName "UNrandom"
+#define MyAppName "UNRandom"
 #endif
 #ifndef MyAppVersion
 #define MyAppVersion "APP_VERSION"
 #endif
 #define MyAppPublisher "李骏健"
-#define MyAppExeName "UNrandom.Desktop.exe"
+#define MyAppExeName "UNRandom.Desktop.exe"
 #define MyAppURL "https://secrandom.sectl.cn/"
 #ifndef MyAppOutDir
 #define MyAppOutDir "APP_OUTDIR"
@@ -25,9 +25,9 @@ AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppSupportURL={#MyAppURL}
 #ifdef UiAccessBuild
-DefaultDirName={autopf}\SECTL\UNrandom
+DefaultDirName={autopf}\SECTL\UNRandom
 #else
-DefaultDirName={localappdata}\SECTL\UNrandom
+DefaultDirName={localappdata}\SECTL\UNRandom
 #endif
 UninstallDisplayIcon={app}\{#MyAppExeName}
 #ifdef BuildArchX86

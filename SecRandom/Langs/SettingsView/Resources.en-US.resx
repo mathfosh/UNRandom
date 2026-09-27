@@ -138,7 +138,7 @@
   <data name="C_Close"><value>Close</value></data>
   <data name="C_CopySessionCode"><value>Copy session code</value></data>
     <data name="M_ImportUnsupportedTitle"><value>Unsupported Import File</value></data>
-    <data name="M_ImportUnsupportedContent"><value>This is not a supported UNrandom v3 export file.</value></data>
+    <data name="M_ImportUnsupportedContent"><value>This is not a supported UNRandom v3 export file.</value></data>
     <data name="M_ImportUnsupportedUnknownVersion"><value>Unknown</value></data>
     <data name="M_ImportUnsupportedVersion"><value>Detected export version: {0}&#xA;&#xA;{1}&#xA;&#xA;No recovery snapshot was created and no data was changed.</value></data>
     <data name="M_NavigateFailed" xml:space="preserve">
@@ -156,7 +156,7 @@
   <data name="C_TransferQuickQrTitle" xml:space="preserve"><value>Quick QR transfer</value></data>
   <data name="C_TransferOfflineQrTitle" xml:space="preserve"><value>Offline QR transfer</value></data>
   <data name="C_TransferSessionCodeTitle" xml:space="preserve"><value>Session-code transfer</value></data>
-  <data name="C_TransferPortalHint" xml:space="preserve"><value>Scan on another device or open UNrandom Sync to receive the transfer.</value></data>
+  <data name="C_TransferPortalHint" xml:space="preserve"><value>Scan on another device or open UNRandom Sync to receive the transfer.</value></data>
   <data name="C_TransferStatusFrames" xml:space="preserve"><value>Frame {0} / {1}</value></data>
   <data name="C_TransferStatusReady" xml:space="preserve"><value>Ready to receive a transfer</value></data>
   <data name="C_TransferStatusReceiving" xml:space="preserve"><value>Receiving transfer</value></data>

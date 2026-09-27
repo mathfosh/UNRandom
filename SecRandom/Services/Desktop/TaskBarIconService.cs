@@ -14,7 +14,7 @@ public class TaskBarIconService : IHostedService
         new()
         {
             Icon = new WindowIcon(AssetLoader.Open(new Uri("avares://SecRandom/Assets/AppLogo.png"))),
-            ToolTipText = @"UNrandom"
+            ToolTipText = @"UNRandom"
         };
 
     public TaskBarIconService()

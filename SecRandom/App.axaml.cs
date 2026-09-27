@@ -465,7 +465,7 @@ public partial class App : Application
         }
         catch (Exception resourceException)
         {
-            startupFailedText = "UNrandom startup failed: " + resourceException.GetType().Name;
+            startupFailedText = "UNRandom startup failed: " + resourceException.GetType().Name;
         }
 
         return new ScrollViewer
@@ -1230,7 +1230,7 @@ public partial class App : Application
 
         var logger = IAppHost.GetService<ILogger<App>>();
 
-        logger.LogInformation(@"UNrandom {VERSION} (Codename: {CODENAME})", GlobalConstants.Version,
+        logger.LogInformation(@"UNRandom {VERSION} (Codename: {CODENAME})", GlobalConstants.Version,
             GlobalConstants.CodeName);
         logger.LogInformation(@"Copyright by SECTL(2025~{YEAR})  Licensed under GPL3.0", DateTime.Now.Year);
         logger.LogInformation("Host built.");
@@ -1683,7 +1683,7 @@ public partial class App : Application
                 WriteDesktopStartupDiagnostic("Creating main window and view host.");
                 var mainWindow = _mainWindow = new MainWindow(MainWindowSettingsScope.Primary)
                 {
-                    Title = @"UNrandom"
+                    Title = @"UNRandom"
                 };
                 var host = new DesktopWindowViewHost(mainWindow, DesktopViewIds.Main);
                 IAppHost.GetService<DesktopViewHostProvider>().RegisterHost(host);
@@ -1864,7 +1864,7 @@ public partial class App : Application
             {
                 var settingsWindow = _settingsWindow = new MainWindow(MainWindowSettingsScope.Settings)
                 {
-                    Title = @"UNrandom"
+                    Title = @"UNRandom"
                 };
                 var host = new DesktopWindowViewHost(settingsWindow, DesktopViewIds.Settings);
                 IAppHost.GetService<DesktopViewHostProvider>().RegisterHost(host);
@@ -2000,7 +2000,7 @@ public partial class App : Application
         _quickDrawWindow = new Window
         {
             Content = IAppHost.GetService<QuickDrawPage>(),
-            Title = @"UNrandom",
+            Title = @"UNRandom",
             MinWidth = 280,
             MinHeight = 160,
             SizeToContent = SizeToContent.WidthAndHeight,

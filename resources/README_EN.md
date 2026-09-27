@@ -28,9 +28,9 @@
 > [!NOTE]
 > SecRandom is released under GNU GPLv3. You may modify and redistribute the source, but derivative redistributions must also use GNU GPLv3.
 
-## UNrandom
+## UNRandom
 
-UNrandom is a fair random-selection application for classrooms, teams, events, decision-making, and other scenarios.
+UNRandom is a fair random-selection application for classrooms, teams, events, decision-making, and other scenarios.
 
 ## Features
 

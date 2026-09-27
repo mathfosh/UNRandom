@@ -175,7 +175,7 @@
         </sr:StickyScrollViewer.HeaderContent>
 
         <StackPanel Classes="page-container animated-intro">
-            <fa:FASettingsExpander x:Name="S_App" Header="UNrandom" IsExpanded="True"
+            <fa:FASettingsExpander x:Name="S_App" Header="UNRandom" IsExpanded="True"
                                    Description="{x:Static lc:Resources.App_Description}">
                 <fa:FASettingsExpander.Footer>
                     <TextBlock Text="{x:Static sr:GlobalConstants.DisplayVersion}"
