@@ -94,7 +94,7 @@ The official GNU GPLv3 text controls. This acknowledgement does not require you 
   <data name="C_Overwrite" xml:space="preserve"><value>Overwrite</value></data>
   <data name="C_ResourcesTitle" xml:space="preserve"><value>Project resources</value></data>
   <data name="C_SectlWebsite" xml:space="preserve"><value>SECTL website</value></data>
-  <data name="C_Documentation" xml:space="preserve"><value>UNrandom documentation</value></data>
+  <data name="C_Documentation" xml:space="preserve"><value>SecRandom documentation (upstream)</value></data>
   <data name="C_AuthorBilibili" xml:space="preserve"><value>Lizeyi_Aionflux on Bilibili</value></data>
   <data name="C_Sponsor" xml:space="preserve"><value>Support on Afdian</value></data>
   <data name="C_Community" xml:space="preserve"><value>SECTL community group</value></data>
