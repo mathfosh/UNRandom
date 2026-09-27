@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net;
@@ -213,19 +213,18 @@ public static class RoundFairnessAudit
                 ShieldEnabled = false,
                 ColdStartEnabled = true
             },
-            RollCallSettings = new RollCallSettingsConfig
-            {
-                DrawMode = DrawMode.Repeat,
-                DrawType = DrawType.Fair,
-                HalfRepeat = 1
-            },
             LotterySettings = new LotterySettingsConfig
             {
                 DrawMode = DrawMode.Repeat,
                 DrawType = LotteryDrawType.Pan,
                 HalfRepeat = 1
             },
-            DefaultDrawSettings = new DefaultDrawSettingsConfig(),
+            DefaultDrawSettings = new DefaultDrawSettingsConfig
+            {
+                DrawMode = DrawMode.Repeat,
+                DrawType = DrawType.Fair,
+                HalfRepeat = 1
+            },
             General = new GeneralSettingsConfig()
         };
     }
@@ -521,8 +520,8 @@ th{background:#f1f5f9}
             string drawGender = "",
             int drawMethod = 0,
             IReadOnlyDictionary<Student, double>? weights = null,
-            string courseName = "") { }
-        public void RecordPrizeHistory(IReadOnlyList<Prize> prizes, DateTime now, int requestedCount) { }
+            string courseName = "", string? drawRoundId = null) { }
+        public void RecordPrizeHistory(IReadOnlyList<Prize> prizes, DateTime now, int requestedCount, int drawMethod = 0, string? drawRoundId = null) { }
         public void ClearCurrentStudentHistory() { }
         public void ClearCurrentPrizeHistory() { }
         public void SaveProfile() { }
