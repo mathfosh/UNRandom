@@ -17,20 +17,8 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="M_CheckingUpdates" xml:space="preserve">
-        <value>更新を確認しています</value>
-    </data>
     <data name="M_UpToDate" xml:space="preserve">
         <value>最新バージョンです</value>
-    </data>
-    <data name="M_UpdateAvailable" xml:space="preserve">
-        <value>新しいバージョン {0} があります</value>
-    </data>
-    <data name="M_CheckUpdatesFailed" xml:space="preserve">
-        <value>更新の確認に失敗しました: {0}</value>
-    </data>
-    <data name="M_DownloadingUpdate" xml:space="preserve">
-        <value>更新をダウンロードしています</value>
     </data>
     <data name="M_OpeningInstaller" xml:space="preserve">
         <value>システムインストーラーを開いています</value>
@@ -40,9 +28,6 @@
     </data>
     <data name="M_InstallerOpened" xml:space="preserve">
         <value>システムインストーラーに引き渡しました</value>
-    </data>
-    <data name="M_InstallUpdateFailed" xml:space="preserve">
-        <value>更新のインストールに失敗しました: {0}</value>
     </data>
     <data name="M_EmptyMetadata" xml:space="preserve">
         <value>更新メタデータが空です。</value>
@@ -119,12 +104,6 @@
     <data name="C_Remove" xml:space="preserve">
         <value>削除</value>
     </data>
-    <data name="C_CheckUpdates" xml:space="preserve">
-        <value>更新を確認</value>
-    </data>
-    <data name="C_InstallUpdate" xml:space="preserve">
-        <value>更新をダウンロードしてインストール</value>
-    </data>
     <data name="S_CurrentList" xml:space="preserve">
         <value>現在の名簿</value>
     </data>
@@ -142,9 +121,6 @@
     </data>
     <data name="S_PrizePool" xml:space="preserve">
         <value>賞品プール</value>
-    </data>
-    <data name="S_AppUpdates" xml:space="preserve">
-        <value>アプリの更新</value>
     </data>
     <data name="P_Draw" xml:space="preserve">
         <value>抽選</value>
@@ -267,7 +243,7 @@
         <value>モバイル版のバックアップと復元は、システムのファイルアクセス権限を伴う完全なトランザクションが提供され次第公開されます。</value>
     </data>
     <data name="M_AboutLicense" xml:space="preserve">
-        <value>SecRandom はイベントや組織の場面向けの公平な抽選ツールで、GPLv3 ライセンスで公開されています。</value>
+        <value>UNrandom はイベントや組織の場面向けの公平な抽選ツールで、GPLv3 ライセンスで公開されています。</value>
     </data>
     <data name="C_Back" xml:space="preserve">
         <value>設定に戻る</value>
@@ -307,9 +283,6 @@
     </data>
     <data name="S_Backup_D" xml:space="preserve">
         <value>データのバックアップと復元</value>
-    </data>
-    <data name="S_AppUpdates_D" xml:space="preserve">
-        <value>署名済みアプリの更新を確認</value>
     </data>
     <data name="S_About" xml:space="preserve">
         <value>このアプリについて</value>
@@ -398,9 +371,6 @@
     <data name="M_Unknown" xml:space="preserve">
         <value>不明</value>
     </data>
-    <data name="S_OnlineStatus" xml:space="preserve">
-        <value>オンラインステータスの報告</value>
-    </data>
     <data name="O_Off" xml:space="preserve">
         <value>オフ</value>
     </data>
@@ -418,15 +388,6 @@
     </data>
     <data name="O_LanguageJapanese" xml:space="preserve">
         <value>日本語</value>
-    </data>
-    <data name="S_Telemetry" xml:space="preserve">
-        <value>エラーとパフォーマンスのテレメトリ</value>
-    </data>
-    <data name="S_SentryTelemetry" xml:space="preserve">
-        <value>Sentry テレメトリ</value>
-    </data>
-    <data name="S_SentryTelemetry_D" xml:space="preserve">
-        <value>クラッシュとパフォーマンスのデータを匿名でアップロードします。個人情報は含まれません。</value>
     </data>
     <data name="S_Language" xml:space="preserve">
         <value>言語</value>
@@ -468,7 +429,7 @@
         <value>設定をインポート</value>
     </data>
     <data name="M_BackupPickerHint" xml:space="preserve">
-        <value>システムのファイルピッカーでエクスポートとインポートを行います。インポート前に SecRandom v3 形式を検証し、サポートされていないファイルはデータを一切変更しません。</value>
+        <value>システムのファイルピッカーでエクスポートとインポートを行います。インポート前に UNrandom v3 形式を検証し、サポートされていないファイルはデータを一切変更しません。</value>
     </data>
     <data name="S_AllData" xml:space="preserve">
         <value>すべてのデータ</value>
@@ -489,7 +450,7 @@
         <value>全データのバックアップを保存</value>
     </data>
     <data name="M_DataArchiveFileType" xml:space="preserve">
-        <value>SecRandom データアーカイブ</value>
+        <value>UNrandom データアーカイブ</value>
     </data>
     <data name="M_ExportCancelled" xml:space="preserve">
         <value>エクスポートをキャンセルしました。</value>
@@ -510,7 +471,7 @@
         <value>設定のバックアップを保存</value>
     </data>
     <data name="M_SettingsFileType" xml:space="preserve">
-        <value>SecRandom 設定ファイル</value>
+        <value>UNrandom 設定ファイル</value>
     </data>
     <data name="M_SettingsExported" xml:space="preserve">
         <value>設定を選択した場所にエクスポートしました。</value>
@@ -537,7 +498,7 @@
         <value>検証に合格しました。確認するとインポートを開始します。</value>
     </data>
     <data name="M_ValidationUnsupported" xml:space="preserve">
-        <value>このファイルはサポートされている SecRandom v3 のエクスポートではないため、インポートできません。</value>
+        <value>このファイルはサポートされている UNrandom v3 のエクスポートではないため、インポートできません。</value>
     </data>
     <data name="M_ReadOrValidateFailed" xml:space="preserve">
         <value>読み込みまたは検証に失敗しました：{0}</value>
@@ -586,15 +547,6 @@
     </data>
     <data name="M_OpenBrowserFailed" xml:space="preserve">
         <value>ブラウザーを開けませんでした。github.com/SECTL/SecRandom に手動でアクセスしてください。</value>
-    </data>
-    <data name="M_InAppUpdateUnsupported" xml:space="preserve">
-        <value>このプラットフォームはアプリ内更新に対応していません</value>
-    </data>
-    <data name="M_IosUpdateDeferred" xml:space="preserve">
-        <value>iOS の配布と更新は今後のバージョンで提供予定です。新しいバージョンはプロジェクトのリリースページから入手してください。</value>
-    </data>
-    <data name="M_UpdateSecurityNote" xml:space="preserve">
-        <value>更新パッケージは Ed25519 署名マニフェストで長さとハッシュを検証した後、システムインストーラーに引き渡されます。</value>
     </data>
     <data name="C_StartDraw" xml:space="preserve"><value>開始</value></data>
     <data name="C_RemainingList" xml:space="preserve"><value>残りの名簿を表示</value></data>

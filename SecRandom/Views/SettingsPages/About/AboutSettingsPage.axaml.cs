@@ -41,10 +41,7 @@ public partial class AboutSettingsPage : UserControl, INotifyPropertyChanged
     private int _bannerClickCount;
     private DateTimeOffset _lastBannerClickAt;
 
-    private OnlineStatusService OnlineStatusService { get; } = IAppHost.Host!.Services
-        .GetServices<IHostedService>().OfType<OnlineStatusService>().First();
     private IExternalLauncher ExternalLauncher { get; } = IAppHost.GetService<IExternalLauncher>();
-    public int OnlineUsersCount => OnlineStatusService.CachedOnlineCount;
     public Bitmap BannerSource { get; } = LoadBanner();
     public ObservableCollection<GitHubContributor> Contributors { get; } = [];
 

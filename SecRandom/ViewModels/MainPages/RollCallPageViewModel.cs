@@ -397,7 +397,7 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void OpenRollCallSettings()
     {
-        App.ShowSettingsWindow("settings.picking.rollCall");
+        App.ShowSettingsWindow("settings.picking.draw");
     }
 
     [RelayCommand]

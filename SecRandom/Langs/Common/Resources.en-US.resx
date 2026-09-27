@@ -65,7 +65,7 @@
         <value>Portable Data Directory Is Not Writable</value>
     </data>
     <data name="M_PortableDataDirectoryUnavailableContent" xml:space="preserve">
-        <value>The SecRandom portable package must be able to write its data directory
+        <value>The UNrandom portable package must be able to write its data directory
 
 Data directory: {0}
 Error: {1}
@@ -76,7 +76,7 @@ Move the entire portable package to a writable location, or adjust the directory
         <value>Unknown error</value>
     </data>
     <data name="Settings_About" xml:space="preserve">
-        <value>About SecRandom</value>
+        <value>About UNrandom</value>
     </data>
     <data name="Settings_Basic" xml:space="preserve">
         <value>Basic</value>
@@ -122,9 +122,6 @@ Move the entire portable package to a writable location, or adjust the directory
     </data>
     <data name="Settings_HistoryManagement" xml:space="preserve">
         <value>History Management</value>
-    </data>
-    <data name="Settings_Update" xml:space="preserve">
-        <value>Update Settings</value>
     </data>
     <data name="Feat_Lottery" xml:space="preserve">
         <value>Lottery</value>
@@ -254,7 +251,7 @@ Move the entire portable package to a writable location, or adjust the directory
         <value>Application Already Running</value>
     </data>
     <data name="MultiInstance_Message" xml:space="preserve">
-        <value>Another instance of SecRandom is already running.</value>
+        <value>Another instance of UNrandom is already running.</value>
     </data>
     <data name="MultiInstance_OpenExisting" xml:space="preserve">
         <value>Show Running Instance</value>

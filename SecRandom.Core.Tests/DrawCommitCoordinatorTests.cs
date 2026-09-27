@@ -131,10 +131,8 @@ public sealed class DrawCommitCoordinatorTests : IDisposable
             provider.GetRequiredService<MainConfigHandler>(),
             null!,
             null!,
-            null!,
             new ProfileQueryService(),
-            null!,
-            provider.GetRequiredService<IFeatureAvailabilityService>());
+            null!);
 
         var response = await router.HandleIpcAsync(
             new IpcRequestEnvelope(1, "request", new IpcRequestPayload($"data/roll_call_history?name={listName}")),

@@ -213,12 +213,6 @@ namespace SecRandom.Langs.Common {
             }
         }
         
-        public static string Settings_Update {
-            get {
-                return ResourceManager.GetString("Settings_Update", resourceCulture);
-            }
-        }
-        
         public static string Menu_OpenSettings {
             get {
                 return ResourceManager.GetString("Menu_OpenSettings", resourceCulture);

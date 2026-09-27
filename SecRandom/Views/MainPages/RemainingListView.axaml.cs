@@ -17,11 +17,7 @@ public sealed partial class RemainingListView : ViewBase
         DataContext = this;
         InitializeComponent();
         if (Items.Count > 0 && this.FindControl<ItemsControl>("ItemsPresenter") is { } presenter)
-        {
-            presenter.ItemTemplate = Items[0] is SecRandom.ViewModels.MainPages.RollCallRemainingItem
-                ? this.FindResource("RollCallRemainingItemTemplate") as IDataTemplate
-                : this.FindResource("LotteryRemainingItemTemplate") as IDataTemplate;
-        }
+            presenter.ItemTemplate = this.FindResource("RollCallRemainingItemTemplate") as IDataTemplate;
     }
 
     public string ViewTitle { get; }

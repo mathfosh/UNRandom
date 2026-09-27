@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lp="clr-namespace:SecRandom.Langs.SettingsPages.Picking"
+             xmlns:local="clr-namespace:SecRandom.Views.SettingsPages.Picking"
+             xmlns:sr="http://secrandom.sectl.cn/schemas/xaml/core"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SecRandom.Views.SettingsPages.Picking.DrawSettingsPage"
+             x:DataType="local:DrawSettingsPage">
+    <ScrollViewer>
+        <StackPanel Classes="page-container animated-intro settings">
+            <sr:IconText Text="{x:Static lp:Resources.Page_Default}" Glyph="{sr:Fi DocumentFilled}"
+                         Margin="0 0 0 4" />
+            <local:DefaultDrawSettingsPage />
+
+            <sr:IconText Text="{x:Static lp:Resources.Page_RollCall}" Glyph="{sr:Fi PersonFilled}"
+                         Margin="0 16 0 4" />
+            <local:RollCallDrawSettingsPage />
+
+            <sr:IconText Text="{x:Static lp:Resources.Page_QuickDraw}" Glyph="{sr:Fi FlashFilled}"
+                         Margin="0 16 0 4" />
+            <local:QuickDrawSettingsPage />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

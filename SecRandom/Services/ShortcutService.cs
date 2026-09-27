@@ -19,7 +19,6 @@ namespace SecRandom.Services;
 public sealed class ShortcutService(
     MainConfigHandler configHandler,
     RollCallPageViewModel rollCallViewModel,
-    LotteryPageViewModel lotteryViewModel,
     IFeatureAvailabilityService featureAvailability,
     ILogger<ShortcutService> logger) : IHostedService, IDisposable
 {
@@ -123,13 +122,6 @@ public sealed class ShortcutService(
             (ShortcutAction.DecreaseRollCallCount, _settings.DecreaseRollCallCountShortcut),
             (ShortcutAction.StartRollCall, _settings.StartRollCallShortcut)
         };
-        if (featureAvailability.IsLotteryEnabled)
-        {
-            bindings.Add((ShortcutAction.OpenLotteryPage, _settings.OpenLotteryPageShortcut));
-            bindings.Add((ShortcutAction.IncreaseLotteryCount, _settings.IncreaseLotteryCountShortcut));
-            bindings.Add((ShortcutAction.DecreaseLotteryCount, _settings.DecreaseLotteryCountShortcut));
-            bindings.Add((ShortcutAction.StartLottery, _settings.StartLotteryShortcut));
-        }
 
         var id = 1;
         foreach (var binding in bindings)
@@ -158,10 +150,6 @@ public sealed class ShortcutService(
 
     private void Execute(ShortcutAction action)
     {
-        if (!featureAvailability.IsLotteryEnabled && action is ShortcutAction.OpenLotteryPage
-            or ShortcutAction.IncreaseLotteryCount or ShortcutAction.DecreaseLotteryCount or ShortcutAction.StartLottery)
-            return;
-
         switch (action)
         {
             case ShortcutAction.OpenRollCallPage:
@@ -169,9 +157,6 @@ public sealed class ShortcutService(
                 break;
             case ShortcutAction.QuickDraw:
                 App.ShowQuickDrawWindow();
-                break;
-            case ShortcutAction.OpenLotteryPage:
-                App.ShowMainWindow("main.lottery");
                 break;
             case ShortcutAction.IncreaseRollCallCount:
                 if (rollCallViewModel.IncreaseCountCommand.CanExecute(null))
@@ -181,21 +166,9 @@ public sealed class ShortcutService(
                 if (rollCallViewModel.DecreaseCountCommand.CanExecute(null))
                     rollCallViewModel.DecreaseCountCommand.Execute(null);
                 break;
-            case ShortcutAction.IncreaseLotteryCount:
-                if (lotteryViewModel.IncreaseCountCommand.CanExecute(null))
-                    lotteryViewModel.IncreaseCountCommand.Execute(null);
-                break;
-            case ShortcutAction.DecreaseLotteryCount:
-                if (lotteryViewModel.DecreaseCountCommand.CanExecute(null))
-                    lotteryViewModel.DecreaseCountCommand.Execute(null);
-                break;
             case ShortcutAction.StartRollCall:
                 if (rollCallViewModel.StartDrawCommand.CanExecute(null))
                     rollCallViewModel.StartDrawCommand.Execute(null);
-                break;
-            case ShortcutAction.StartLottery:
-                if (lotteryViewModel.StartDrawCommand.CanExecute(null))
-                    lotteryViewModel.StartDrawCommand.Execute(null);
                 break;
         }
     }
@@ -271,13 +244,9 @@ public sealed class ShortcutService(
     {
         OpenRollCallPage,
         QuickDraw,
-        OpenLotteryPage,
         IncreaseRollCallCount,
         DecreaseRollCallCount,
-        IncreaseLotteryCount,
-        DecreaseLotteryCount,
-        StartRollCall,
-        StartLottery
+        StartRollCall
     }
 
     [StructLayout(LayoutKind.Sequential)]

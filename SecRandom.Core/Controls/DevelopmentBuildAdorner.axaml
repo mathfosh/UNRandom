@@ -11,7 +11,7 @@
                        FontSize="12"
                        Opacity="0.8">
                 开发中画面，不代表最终品质。<LineBreak />
-                SecRandom
+                UNrandom
                 <Run Text="{x:Static sr:GlobalConstants.VersionLong}" />
             </TextBlock>
         </Grid>

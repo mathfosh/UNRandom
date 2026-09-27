@@ -21,16 +21,13 @@ namespace SecRandom.Services.Ipc;
 public sealed class ProtocolCommandRouter(
     MainConfigHandler configHandler,
     RollCallPageViewModel rollCall,
-    LotteryPageViewModel lottery,
     QuickDrawPageViewModel quickDraw,
     IProfileQueryService profileQuery,
-    ISecurityService security,
-    IFeatureAvailabilityService featureAvailability)
+    ISecurityService security)
 {
     private static readonly Dictionary<string, string> MainPages = new(StringComparer.OrdinalIgnoreCase)
     {
         ["roll_call_page"] = "main.rollCall", ["roll"] = "main.rollCall",
-        ["lottery_page"] = "main.lottery", ["lottery"] = "main.lottery",
         ["history_page"] = "main.history", ["history"] = "main.history"
     };
 
@@ -38,14 +35,14 @@ public sealed class ProtocolCommandRouter(
     {
         ["basicsettingsinterface"] = "settings.general.basic",
         ["listmanagementinterface"] = "settings.listManagement.rollCallList",
-        ["extractionsettingsinterface"] = "settings.picking.default",
+        ["extractionsettingsinterface"] = "settings.picking.draw",
         ["floatingwindowmanagementinterface"] = "settings.personalized.floatingWindow",
         ["notificationsettingsinterface"] = "settings.notification.default",
         ["safetysettingsinterface"] = "settings.general.security",
         ["customsettingsinterface"] = "settings.more", ["moresettingsinterface"] = "settings.more",
         ["voicesettingsinterface"] = "settings.notification.voiceMusic",
         ["historyinterface"] = "settings.history.management",
-        ["updateinterface"] = "settings.update", ["aboutinterface"] = "settings.about"
+        ["aboutinterface"] = "settings.about"
     };
 
     public Task<IpcResponseEnvelope> HandleIpcAsync(IpcRequestEnvelope request, CancellationToken cancellationToken)
@@ -94,7 +91,6 @@ public sealed class ProtocolCommandRouter(
             "settings/voice" => await HandleSettingsWindowAsync(WithLegacySettingsPage(request.Query, "voiceSettingsInterface"), cancellationToken),
             "settings/history" => await HandleSettingsWindowAsync(WithLegacySettingsPage(request.Query, "historyInterface"), cancellationToken),
             "settings/more" => await HandleSettingsWindowAsync(WithLegacySettingsPage(request.Query, "moreSettingsInterface"), cancellationToken),
-            "settings/update" => await HandleSettingsWindowAsync(WithLegacySettingsPage(request.Query, "updateInterface"), cancellationToken),
             "settings/about" => await HandleSettingsWindowAsync(WithLegacySettingsPage(request.Query, "aboutInterface"), cancellationToken),
             "window/float" => await HandleFloatingWindowAsync(request.Query, cancellationToken),
             "tray/toggle" => await RunAuthorizedAsync(SecurityOperation.ToggleMainWindow, () => { App.SetMainWindowVisibility("toggle"); return Task.CompletedTask; }, LR.M_MainToggled, cancellationToken),
@@ -103,7 +99,6 @@ public sealed class ProtocolCommandRouter(
             "tray/restart" => await RunAuthorizedAsync(SecurityOperation.RestartApplication, () => { App.Current.Restart(); return Task.CompletedTask; }, LR.M_Restarting, cancellationToken),
             "tray/exit" => await RunAuthorizedAsync(SecurityOperation.ExitApplication, () => { App.Current.Stop(); return Task.CompletedTask; }, LR.M_Exiting, cancellationToken),
             _ when route.StartsWith("roll_call/", StringComparison.Ordinal) => await HandleRollCallAsync(route, request.Query, cancellationToken),
-            _ when route.StartsWith("lottery/", StringComparison.Ordinal) => await HandleLotteryAsync(route, request.Query, cancellationToken),
             _ => Failure("url", "invalid_command", LR.M_UnsupportedCommand)
         };
     }
@@ -113,8 +108,6 @@ public sealed class ProtocolCommandRouter(
         var page = ProtocolRequestParser.GetLast(query, "page", "page_name", "name", "value");
         if (page is not null && !MainPages.TryGetValue(page, out page))
             return Failure("url", "invalid_parameter", LR.M_InvalidMainPage);
-        if (page == "main.lottery" && !featureAvailability.IsLotteryEnabled)
-            return Failure("url", "feature_disabled", "抽奖功能已关闭。", true);
         var action = ParseAction(query, page is null ? "toggle" : "show");
         if (action is null) return Failure("url", "invalid_parameter", LR.M_InvalidWindowAction);
         return await RunAuthorizedAsync(SecurityOperation.ToggleMainWindow, () =>
@@ -201,35 +194,6 @@ public sealed class ProtocolCommandRouter(
         }
     }
 
-    private async Task<IpcResponseEnvelope> HandleLotteryAsync(string route, IReadOnlyList<ProtocolQueryItem> query, CancellationToken token)
-    {
-        if (!featureAvailability.IsLotteryEnabled)
-            return Failure("url", "feature_disabled", "抽奖功能已关闭。", true);
-
-        switch (route)
-        {
-            case "lottery/start": return await StartLinkageAsync(
-                () => featureAvailability.IsLotteryEnabled && !lottery.IsDrawing && lottery.CanStartDraw,
-                () => lottery.StartProtocolDrawAsync(protectLinkage: true),
-                LR.M_LotteryStarted,
-                token);
-            case "lottery/stop": return await RunLotteryAuthorizedAsync(() =>
-            {
-                lottery.StopProtocolDraw();
-                return Task.CompletedTask;
-            }, LR.M_LotteryStopped, token);
-            case "lottery/reset": return await RunLotteryLinkageAsync(() => lottery.ResetProtocolDrawAsync(protectLinkage: true), LR.M_LotteryReset, token);
-            case "lottery/set_count": return await RunLotteryAuthorizedAsync(() => SetCount(
-                query, LR.L_LotteryCount, lottery.TotalCount, lottery.RemainingCount, lottery.MaximumDrawCount, value => lottery.DrawCount = value), LR.M_LotteryCountSet, token);
-            case "lottery/set_pool": return await RunLotteryAuthorizedAsync(() => SetPrizePool(query), LR.M_PoolSet, token);
-            case "lottery/set_list": return await RunLotteryAuthorizedAsync(() => SetStudentList(
-                query, lottery.StudentListNames, value => lottery.SelectedStudentListName = value), LR.M_StudentListSet, token);
-            case "lottery/set_group": return await RunLotteryAuthorizedAsync(() => SetLotteryGroup(query), LR.M_LotteryGroupSet, token);
-            case "lottery/set_gender": return await RunLotteryAuthorizedAsync(() => SetLotteryGender(query), LR.M_LotteryGenderSet, token);
-            default: return Failure("url", "invalid_command", LR.M_UnsupportedLottery, true);
-        }
-    }
-
     private IpcResponseEnvelope HandleDataQuery(string route, IReadOnlyList<ProtocolQueryItem> query)
     {
         var name = ProtocolRequestParser.GetLast(query, "class_name", "classname", "class", "pool_name", "poolname", "pool", "name", "list_name");
@@ -237,9 +201,7 @@ public sealed class ProtocolCommandRouter(
         return route switch
         {
             "data/roll_call_list" => LoadStudents(name),
-            "data/lottery_list" => LoadPrizes(name),
             "data/roll_call_history" => LoadStudentHistory(name),
-            "data/lottery_history" => LoadPrizeHistory(name),
             _ => Failure("url", "invalid_command", LR.M_UnsupportedData, true)
         };
     }
@@ -254,16 +216,6 @@ public sealed class ProtocolCommandRouter(
         return Success(LR.M_RollCallListLoaded, data);
     }
 
-    private IpcResponseEnvelope LoadPrizes(string name)
-    {
-        var list = profileQuery.LoadPrizeList(name);
-        if (list is null)
-            return Failure("url", "not_found", LR.M_PrizePoolNotFound, true);
-        var data = list.Prizes.Where(prize => prize.IsCandidate)
-            .Select(prize => new IpcRecordDto(prize.Id, prize.Name, string.Empty)).ToList();
-        return Success(LR.M_PrizePoolLoaded, data);
-    }
-
     private IpcResponseEnvelope LoadStudentHistory(string name)
     {
         var history = profileQuery.LoadStudentHistory(name);
@@ -275,22 +227,6 @@ public sealed class ProtocolCommandRouter(
             .ThenByDescending(group => group.Key)
             .Select(group => new IpcHistoryEntryDto(group.Max(item => item.DrawTime).ToString("O"), group.Select(item => new IpcHistoryRecordDto(item.RecordNumber, item.RecordName)).ToList())).ToList() ?? [];
         return Success(LR.M_RollCallHistoryLoaded, data);
-    }
-
-    private IpcResponseEnvelope LoadPrizeHistory(string name)
-    {
-        var history = profileQuery.LoadPrizeHistory(name);
-        if (history is null)
-            return Failure("url", "not_found", LR.M_PrizeHistoryNotFound, true);
-        var data = history.Prizes.Values.SelectMany(item => item.Histories)
-            .GroupBy(item => string.IsNullOrWhiteSpace(item.DrawRoundId) ? $"legacy:{item.DrawTime:O}:{item.DrawNumbers}" : item.DrawRoundId)
-            .OrderByDescending(group => group.Max(item => item.DrawTime))
-            .ThenByDescending(group => group.Key)
-            .Select(group => new IpcHistoryEntryDto(
-                group.Max(item => item.DrawTime).ToString("O"),
-                null,
-                group.Select(item => new IpcHistoryRecordDto(item.RecordNumber, item.RecordName)).ToList())).ToList() ?? [];
-        return Success(LR.M_PrizeHistoryLoaded, data);
     }
 
     private static Task SetCount(
@@ -365,30 +301,6 @@ public sealed class ProtocolCommandRouter(
         return Task.CompletedTask;
     }
 
-    private Task SetPrizePool(IReadOnlyList<ProtocolQueryItem> query)
-    {
-        var name = ProtocolRequestParser.GetLast(query, "pool_name", "poolname", "pool", "name", "text", "value");
-        var selected = ResolveOption(name, ProtocolRequestParser.GetLast(query, "pool_index", "index"), lottery.PrizeListNames.ToArray(), null);
-        if (selected is null)
-            throw new ProtocolCommandException("invalid_parameter", LR.M_InvalidPool);
-        lottery.SelectedPrizeListName = selected;
-        return Task.CompletedTask;
-    }
-
-    private Task SetLotteryGroup(IReadOnlyList<ProtocolQueryItem> query)
-    {
-        if (!lottery.IsStudentAssignmentEnabled)
-            throw new ProtocolCommandException("invalid_state", LR.M_AssignmentUnavailable);
-        return SetGroup(query, LR.L_LotteryGroup, lottery.GroupOptions, value => lottery.SelectedGroup = value);
-    }
-
-    private Task SetLotteryGender(IReadOnlyList<ProtocolQueryItem> query)
-    {
-        if (!lottery.IsStudentAssignmentEnabled)
-            throw new ProtocolCommandException("invalid_state", LR.M_AssignmentUnavailable);
-        return SetGender(query, LR.L_LotteryGender, lottery.GenderOptions, value => lottery.SelectedGender = value);
-    }
-
     private async Task<IpcResponseEnvelope> RunAuthorizedAsync(SecurityOperation operation, Func<Task> action, string message, CancellationToken token)
     {
         try
@@ -416,28 +328,6 @@ public sealed class ProtocolCommandRouter(
             return Failure("url", "authorization_denied", LR.M_AuthorizationDenied, true);
 
         return Success(message, new { state = "running" });
-    }
-
-    private Task<IpcResponseEnvelope> RunLotteryAuthorizedAsync(Func<Task> action, string message, CancellationToken token)
-    {
-        return RunAuthorizedAsync(SecurityOperation.LinkageAction, () =>
-        {
-            if (!featureAvailability.IsLotteryEnabled)
-                throw new ProtocolCommandException("feature_disabled", "抽奖功能已关闭。");
-            return action();
-        }, message, token);
-    }
-
-    private async Task<IpcResponseEnvelope> RunLotteryLinkageAsync(Func<Task<bool>> action, string message, CancellationToken token)
-    {
-        if (!featureAvailability.IsLotteryEnabled)
-            return Failure("url", "feature_disabled", "抽奖功能已关闭。", true);
-        return await RunLinkageAsync(async () =>
-        {
-            if (!featureAvailability.IsLotteryEnabled)
-                return false;
-            return await action().ConfigureAwait(true);
-        }, message, token);
     }
 
     private async Task<IpcResponseEnvelope> HandleQuickDrawAsync(CancellationToken token)

@@ -122,14 +122,6 @@ namespace SecRandom.Langs.CrashRecovery {
             }
         }
 
-        /// <summary>
-        ///   Looks up a localized string similar to 应用内反馈.
-        /// </summary>
-        public static string C_ReportInApp {
-            get {
-                return ResourceManager.GetString("C_ReportInApp", resourceCulture);
-            }
-        }
 
         /// <summary>
         ///   Looks up a localized string similar to 反馈问题.
@@ -216,23 +208,6 @@ namespace SecRandom.Langs.CrashRecovery {
             }
         }
 
-        /// <summary>
-        ///   Looks up a localized string similar to 应用内反馈提交失败，请使用 GitHub 反馈。.
-        /// </summary>
-        public static string M_ReportFailed {
-            get {
-                return ResourceManager.GetString("M_ReportFailed", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to 崩溃报告已通过应用内反馈提交。.
-        /// </summary>
-        public static string M_ReportSuccess {
-            get {
-                return ResourceManager.GetString("M_ReportSuccess", resourceCulture);
-            }
-        }
 
         /// <summary>
         ///   Looks up a localized string similar to 无堆栈信息.

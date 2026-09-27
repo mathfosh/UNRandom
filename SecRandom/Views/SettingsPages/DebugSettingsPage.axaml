@@ -54,17 +54,6 @@
                 </fa:FASettingsExpanderItem>
             </fa:FASettingsExpander>
 
-            <fa:FASettingsExpander IconSource="{sr:FluentIconSource {sr:Fi ArrowSyncFilled}}"
-                                   Header="{Binding Strings.S_UpdateDiagnostics}" IsExpanded="False">
-                <fa:FASettingsExpanderItem Content="{Binding Strings.C_RefreshUpdate}"
-                                           Description="{Binding Strings.C_RefreshUpdate_D}"
-                                           IsClickEnabled="True"
-                                           Click="RefreshDiagnostics_OnClick" />
-                <SelectableTextBlock Text="{Binding UpdateDiagnostics}"
-                                     TextWrapping="Wrap"
-                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-            </fa:FASettingsExpander>
-
             <fa:FASettingsExpander IconSource="{sr:FluentIconSource {sr:Fi CalendarInfoFilled}}"
                                    Header="{Binding Strings.S_LinkageNotificationDiagnostics}" IsExpanded="False">
                 <fa:FASettingsExpanderItem Content="{Binding Strings.C_RefreshLinkage}"

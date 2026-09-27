@@ -182,49 +182,6 @@
 
                 <ScrollViewer IsVisible="{Binding ViewModel.IsFullSetup}">
                     <StackPanel Margin="32" Spacing="8">
-                        <TextBlock Text="{x:Static langs:Resources.C_LotteryTitle}"
-                                   Theme="{StaticResource TitleTextBlockStyle}" />
-                        <TextBlock Text="{x:Static langs:Resources.C_LotteryDescription}"
-                                   Margin="0 0 0 8"
-                                   TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <fa:FASettingsExpander Header="{x:Static langs:Resources.C_LotteryEnabled}"
-                                               IconSource="{sr:FluentIconSource {sr:Fi GiftFilled}}">
-                            <fa:FASettingsExpander.Footer>
-                                <ToggleSwitch IsChecked="{Binding ViewModel.MoreSettings.LotteryEnabled}" />
-                            </fa:FASettingsExpander.Footer>
-                        </fa:FASettingsExpander>
-                        <fa:FASettingsExpander Header="{x:Static langs:Resources.C_PrizeList}"
-                                               Description="{x:Static langs:Resources.C_PrizeListDescription}"
-                                               IconSource="{sr:FluentIconSource {sr:Fi LotteryFilled}}"
-                                               IsExpanded="True"
-                                               IsVisible="{Binding ViewModel.MoreSettings.LotteryEnabled}">
-                            <fa:FASettingsExpander.Footer>
-                                <ComboBox MinWidth="220"
-                                          ItemsSource="{Binding ViewModel.PrizeListNames}"
-                                          SelectedItem="{Binding ViewModel.SelectedPrizeListName, Mode=TwoWay}" />
-                            </fa:FASettingsExpander.Footer>
-                            <fa:FASettingsExpanderItem>
-                                <fa:FASettingsExpanderItem.Footer>
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <Button Content="{x:Static langs:Resources.C_RefreshList}"
-                                                Click="RefreshPrizeLists_OnClick" />
-                                        <Button Content="{x:Static langs:Resources.C_AddList}"
-                                                Click="AddPrizeList_OnClick" />
-                                        <Button Content="{x:Static langs:Resources.C_RenameList}"
-                                                Click="RenamePrizeList_OnClick" />
-                                        <Button Content="{x:Static langs:Resources.C_DeleteList}"
-                                                Click="DeletePrizeList_OnClick" />
-                                        <Button Classes="accent" Content="{x:Static langs:Resources.C_PrizeImport}"
-                                                Click="ImportPrizePool_OnClick" />
-                                    </StackPanel>
-                                </fa:FASettingsExpanderItem.Footer>
-                            </fa:FASettingsExpanderItem>
-                        </fa:FASettingsExpander>
-                    </StackPanel>
-                </ScrollViewer>
-
-                <ScrollViewer IsVisible="{Binding ViewModel.IsFullSetup}">
-                    <StackPanel Margin="32" Spacing="8">
                         <TextBlock Text="{x:Static langs:Resources.C_AppearanceTitle}"
                                    Theme="{StaticResource TitleTextBlockStyle}" />
                         <fa:FASettingsExpander Header="{x:Static langs:Resources.C_Theme}"
@@ -294,38 +251,6 @@
                 </ScrollViewer>
 
                 <ScrollViewer IsVisible="{Binding ViewModel.IsFullSetup}">
-                    <StackPanel Margin="32" Spacing="8">
-                        <TextBlock Text="{x:Static langs:Resources.C_PrivacyTitle}"
-                                   Theme="{StaticResource TitleTextBlockStyle}" />
-                        <TextBlock Text="{x:Static langs:Resources.C_PrivacyDescription}"
-                                   Margin="0 0 0 8"
-                                   TextWrapping="Wrap"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <TextBlock Text="{x:Static langs:Resources.C_PrivacyEncouragement}"
-                                   TextWrapping="Wrap"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <fa:FASettingsExpander Header="{x:Static langs:Resources.C_SentryTelemetry}"
-                                               Description="{x:Static langs:Resources.C_SentryTelemetryDescription}"
-                                               IconSource="{sr:FluentIconSource {sr:Fi PulseFilled}}">
-                            <fa:FASettingsExpander.Footer>
-                                <ToggleSwitch IsChecked="{Binding ViewModel.PrivacySettings.SentryTelemetryEnabled}" />
-                            </fa:FASettingsExpander.Footer>
-                        </fa:FASettingsExpander>
-                        <fa:FASettingsExpander Header="{x:Static langs:Resources.C_OnlineStatus}"
-                                               Description="{x:Static langs:Resources.C_OnlineStatusDescription}"
-                                               IconSource="{sr:FluentIconSource {sr:Fi GlobeFilled}}">
-                            <fa:FASettingsExpander.Footer>
-                                <ComboBox SelectedIndex="{Binding ViewModel.PrivacySettings.OnlineStatusMode}">
-                                    <ComboBoxItem Content="{x:Static langs:Resources.O_OnlineStatusMode_Full}" />
-                                    <ComboBoxItem Content="{x:Static langs:Resources.O_OnlineStatusMode_Anonymous}" />
-                                    <ComboBoxItem Content="{x:Static langs:Resources.O_OnlineStatusMode_Off}" />
-                                </ComboBox>
-                            </fa:FASettingsExpander.Footer>
-                        </fa:FASettingsExpander>
-                    </StackPanel>
-                </ScrollViewer>
-
-                <ScrollViewer IsVisible="{Binding ViewModel.IsFullSetup}">
                     <StackPanel Margin="32" Spacing="14">
                         <TextBlock Text="{x:Static langs:Resources.C_CompleteTitle}"
                                    Theme="{StaticResource TitleTextBlockStyle}" />
@@ -339,7 +264,6 @@
                                 <TextBlock Text="{x:Static langs:Resources.C_CompletedClass}" />
                                 <TextBlock Text="{x:Static langs:Resources.C_CompletedAppearance}" />
                                 <TextBlock Text="{x:Static langs:Resources.C_CompletedIntegration}" TextWrapping="Wrap" />
-                                <TextBlock Text="{x:Static langs:Resources.C_CompletedPrivacy}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Border>
                         <StackPanel Spacing="8">

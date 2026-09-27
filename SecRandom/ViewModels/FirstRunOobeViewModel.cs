@@ -29,7 +29,6 @@ public sealed partial class FirstRunOobeViewModel : ViewModelBase, IDisposable
     private readonly IProfileCatalogManager _catalogManager;
     private AppearanceSettingsConfig? _appearanceSettings;
     private BasicSettingsConfig? _basicSettings;
-    private PrivacySettingsConfig? _privacySettings;
     private FloatingWindowSettingsConfig? _floatingWindowSettings;
     private MoreSettingsConfig? _moreSettings;
 
@@ -63,7 +62,6 @@ public sealed partial class FirstRunOobeViewModel : ViewModelBase, IDisposable
 
     public AppearanceSettingsConfig Appearance => _configHandler.Data.Appearance;
     public BasicSettingsConfig Basic => _configHandler.Data.General.Basic;
-    public PrivacySettingsConfig PrivacySettings => _configHandler.Data.General.PrivacySettings;
     public FloatingWindowSettingsConfig FloatingWindow => _configHandler.Data.FloatingWindowSettings;
     public MoreSettingsConfig MoreSettings => _configHandler.Data.MoreSettings;
     public ObservableCollection<string> StudentListNames { get; } = [];
@@ -87,7 +85,7 @@ public sealed partial class FirstRunOobeViewModel : ViewModelBase, IDisposable
                                (AcceptedPrivacyPolicy && AcceptedGpl &&
                                 (!IsVerificationNoticeRequired || AcceptedVerificationNotice));
     public bool IsPrivacyPolicyStep => IsPrivacyPolicyOnly || SelectedStep == 1;
-    public int StepCount => 8;
+    public int StepCount => 6;
     public string PageTitle => IsPrivacyPolicyOnly ? LR.C_LegalTitle : LR.C_Title;
     public string IntroText => IsPrivacyPolicyOnly ? LR.C_LegalDescription : LR.C_Intro;
 
@@ -221,15 +219,12 @@ public sealed partial class FirstRunOobeViewModel : ViewModelBase, IDisposable
             _appearanceSettings.PropertyChanged -= RefreshAppearance;
         if (_basicSettings is not null)
             _basicSettings.PropertyChanged -= PersistSettingsOnPropertyChanged;
-        if (_privacySettings is not null)
-            _privacySettings.PropertyChanged -= PersistSettingsOnPropertyChanged;
         if (_floatingWindowSettings is not null)
             _floatingWindowSettings.PropertyChanged -= PersistSettingsOnPropertyChanged;
         if (_moreSettings is not null)
             _moreSettings.PropertyChanged -= PersistSettingsOnPropertyChanged;
         _appearanceSettings = _configHandler.Data.Appearance;
         _basicSettings = _configHandler.Data.General.Basic;
-        _privacySettings = _configHandler.Data.General.PrivacySettings;
         _floatingWindowSettings = _configHandler.Data.FloatingWindowSettings;
         _moreSettings = _configHandler.Data.MoreSettings;
         Autostart = _basicSettings.Autostart;
@@ -238,7 +233,6 @@ public sealed partial class FirstRunOobeViewModel : ViewModelBase, IDisposable
         if (IsPrivacyPolicyOnly)
             SelectedStep = 1;
         OnPropertyChanged(nameof(Basic));
-        OnPropertyChanged(nameof(PrivacySettings));
         OnPropertyChanged(nameof(IsPrivacyPolicyOnly));
         OnPropertyChanged(nameof(IsFullSetup));
         OnPropertyChanged(nameof(IsVerificationNoticeRequired));
@@ -253,7 +247,6 @@ public sealed partial class FirstRunOobeViewModel : ViewModelBase, IDisposable
         _appearanceSettings.PropertyChanged += RefreshAppearance;
         _appearanceSettings.PropertyChanged += PersistSettingsOnPropertyChanged;
         _basicSettings.PropertyChanged += PersistSettingsOnPropertyChanged;
-        _privacySettings.PropertyChanged += PersistSettingsOnPropertyChanged;
         _floatingWindowSettings.PropertyChanged += PersistSettingsOnPropertyChanged;
         _moreSettings.PropertyChanged += PersistSettingsOnPropertyChanged;
     }
@@ -384,8 +377,6 @@ public sealed partial class FirstRunOobeViewModel : ViewModelBase, IDisposable
         }
         if (_basicSettings is not null)
             _basicSettings.PropertyChanged -= PersistSettingsOnPropertyChanged;
-        if (_privacySettings is not null)
-            _privacySettings.PropertyChanged -= PersistSettingsOnPropertyChanged;
         if (_floatingWindowSettings is not null)
             _floatingWindowSettings.PropertyChanged -= PersistSettingsOnPropertyChanged;
         if (_moreSettings is not null)

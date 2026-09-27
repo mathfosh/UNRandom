@@ -14,7 +14,6 @@ public static class MobilePageIds
     public const string History = "main.history";
     public const string Overview = "main.overview";
     public const string Settings = "root.settings";
-    public const string Update = "settings.update";
 }
 
 public enum MobileDestination
@@ -31,19 +30,10 @@ public enum MobileDestination
 public interface IMobileCapabilities
 {
     bool IsLotteryEnabled { get; }
-    bool SupportsInAppUpdate { get; }
 }
 
 internal sealed class MobileCapabilities(
-    IFeatureAvailabilityService featureAvailability,
-    IMobileUpdateInstaller updateInstaller) : IMobileCapabilities
+    IFeatureAvailabilityService featureAvailability) : IMobileCapabilities
 {
     public bool IsLotteryEnabled => featureAvailability.IsLotteryEnabled;
-    public bool SupportsInAppUpdate => updateInstaller.IsSupported;
-}
-
-internal enum DrawSurface
-{
-    RollCall,
-    Lottery
 }

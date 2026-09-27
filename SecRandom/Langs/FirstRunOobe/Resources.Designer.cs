@@ -423,65 +423,6 @@ namespace SecRandom.Langs.FirstRunOobe {
             }
         }
         
-        public static string C_PrivacyTitle {
-            get {
-                return ResourceManager.GetString("C_PrivacyTitle", resourceCulture);
-            }
-        }
-        
-        public static string C_PrivacyDescription {
-            get {
-                return ResourceManager.GetString("C_PrivacyDescription", resourceCulture);
-            }
-        }
-        
-        public static string C_PrivacyEncouragement {
-            get {
-                return ResourceManager.GetString("C_PrivacyEncouragement", resourceCulture);
-            }
-        }
-        
-        public static string C_SentryTelemetry {
-            get {
-                return ResourceManager.GetString("C_SentryTelemetry", resourceCulture);
-            }
-        }
-        
-        public static string C_SentryTelemetryDescription {
-            get {
-                return ResourceManager.GetString("C_SentryTelemetryDescription", resourceCulture);
-            }
-        }
-        
-        public static string C_OnlineStatus {
-            get {
-                return ResourceManager.GetString("C_OnlineStatus", resourceCulture);
-            }
-        }
-        
-        public static string C_OnlineStatusDescription {
-            get {
-                return ResourceManager.GetString("C_OnlineStatusDescription", resourceCulture);
-            }
-        }
-        
-        public static string O_OnlineStatusMode_Full {
-            get {
-                return ResourceManager.GetString("O_OnlineStatusMode_Full", resourceCulture);
-            }
-        }
-        
-        public static string O_OnlineStatusMode_Anonymous {
-            get {
-                return ResourceManager.GetString("O_OnlineStatusMode_Anonymous", resourceCulture);
-            }
-        }
-        
-        public static string O_OnlineStatusMode_Off {
-            get {
-                return ResourceManager.GetString("O_OnlineStatusMode_Off", resourceCulture);
-            }
-        }
         
         public static string C_CompleteTitle {
             get {
@@ -519,11 +460,6 @@ namespace SecRandom.Langs.FirstRunOobe {
             }
         }
         
-        public static string C_CompletedPrivacy {
-            get {
-                return ResourceManager.GetString("C_CompletedPrivacy", resourceCulture);
-            }
-        }
         
         public static string C_OverwriteTitle {
             get {

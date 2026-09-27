@@ -50,7 +50,6 @@ public partial class MainConfigModel : ConfigBase, IJsonOnDeserialized
     [ObservableProperty] private LinkageSettingsConfig _linkageSettings = new();
     [ObservableProperty] private VoiceSettingsConfig _voiceSettings = new();
     [ObservableProperty] private HistoryManagementSettingsConfig _historyManagementSettings = new();
-    [ObservableProperty] private UpdateSettingsConfig _updateSettings = new();
     [ObservableProperty] private MoreSettingsConfig _moreSettings = new();
     [ObservableProperty] private List<int> _recentTimerPresetSeconds = [];
 

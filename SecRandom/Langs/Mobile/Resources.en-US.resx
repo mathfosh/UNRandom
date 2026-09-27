@@ -17,20 +17,8 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="M_CheckingUpdates" xml:space="preserve">
-        <value>Checking for updates</value>
-    </data>
     <data name="M_UpToDate" xml:space="preserve">
         <value>You're on the latest version</value>
-    </data>
-    <data name="M_UpdateAvailable" xml:space="preserve">
-        <value>New version {0} available</value>
-    </data>
-    <data name="M_CheckUpdatesFailed" xml:space="preserve">
-        <value>Failed to check for updates: {0}</value>
-    </data>
-    <data name="M_DownloadingUpdate" xml:space="preserve">
-        <value>Downloading update</value>
     </data>
     <data name="M_OpeningInstaller" xml:space="preserve">
         <value>Opening the system installer</value>
@@ -40,9 +28,6 @@
     </data>
     <data name="M_InstallerOpened" xml:space="preserve">
         <value>Handed off to the system installer</value>
-    </data>
-    <data name="M_InstallUpdateFailed" xml:space="preserve">
-        <value>Failed to install the update: {0}</value>
     </data>
     <data name="M_EmptyMetadata" xml:space="preserve">
         <value>Update metadata is empty.</value>
@@ -119,12 +104,6 @@
     <data name="C_Remove" xml:space="preserve">
         <value>Remove</value>
     </data>
-    <data name="C_CheckUpdates" xml:space="preserve">
-        <value>Check for Updates</value>
-    </data>
-    <data name="C_InstallUpdate" xml:space="preserve">
-        <value>Download and Install Update</value>
-    </data>
     <data name="S_CurrentList" xml:space="preserve">
         <value>Current List</value>
     </data>
@@ -142,9 +121,6 @@
     </data>
     <data name="S_PrizePool" xml:space="preserve">
         <value>Prize Pool</value>
-    </data>
-    <data name="S_AppUpdates" xml:space="preserve">
-        <value>App Updates</value>
     </data>
     <data name="P_Draw" xml:space="preserve">
         <value>Draw</value>
@@ -267,7 +243,7 @@ Clearing history before fair drawing helps keep the new member’s chance from b
         <value>Mobile backup and restore will become available once a full transaction with system file access authorization is provided.</value>
     </data>
     <data name="M_AboutLicense" xml:space="preserve">
-        <value>SecRandom is a fair drawing tool for events and organizations, released under the GPLv3 license.</value>
+        <value>UNrandom is a fair drawing tool for events and organizations, released under the GPLv3 license.</value>
     </data>
     <data name="C_Back" xml:space="preserve">
         <value>Back to Settings</value>
@@ -307,9 +283,6 @@ Clearing history before fair drawing helps keep the new member’s chance from b
     </data>
     <data name="S_Backup_D" xml:space="preserve">
         <value>Data backup and restore</value>
-    </data>
-    <data name="S_AppUpdates_D" xml:space="preserve">
-        <value>Check for signed app updates</value>
     </data>
     <data name="S_About" xml:space="preserve">
         <value>About</value>
@@ -398,9 +371,6 @@ Clearing history before fair drawing helps keep the new member’s chance from b
     <data name="M_Unknown" xml:space="preserve">
         <value>Unknown</value>
     </data>
-    <data name="S_OnlineStatus" xml:space="preserve">
-        <value>Online Status Reporting</value>
-    </data>
     <data name="O_Off" xml:space="preserve">
         <value>Off</value>
     </data>
@@ -418,15 +388,6 @@ Clearing history before fair drawing helps keep the new member’s chance from b
     </data>
     <data name="O_LanguageJapanese" xml:space="preserve">
         <value>Japanese</value>
-    </data>
-    <data name="S_Telemetry" xml:space="preserve">
-        <value>Error &amp; Performance Telemetry</value>
-    </data>
-    <data name="S_SentryTelemetry" xml:space="preserve">
-        <value>Sentry Telemetry</value>
-    </data>
-    <data name="S_SentryTelemetry_D" xml:space="preserve">
-        <value>Anonymously uploads crash and performance data. No personal information is included.</value>
     </data>
     <data name="S_Language" xml:space="preserve">
         <value>Language</value>
@@ -468,7 +429,7 @@ Clearing history before fair drawing helps keep the new member’s chance from b
         <value>Import Settings</value>
     </data>
     <data name="M_BackupPickerHint" xml:space="preserve">
-        <value>Export and import through the system file picker. Files are validated against the SecRandom v3 format before import; unsupported files will not change any data.</value>
+        <value>Export and import through the system file picker. Files are validated against the UNrandom v3 format before import; unsupported files will not change any data.</value>
     </data>
     <data name="S_AllData" xml:space="preserve">
         <value>All Data</value>
@@ -489,7 +450,7 @@ Clearing history before fair drawing helps keep the new member’s chance from b
         <value>Save All-Data Backup</value>
     </data>
     <data name="M_DataArchiveFileType" xml:space="preserve">
-        <value>SecRandom Data Archive</value>
+        <value>UNrandom Data Archive</value>
     </data>
     <data name="M_ExportCancelled" xml:space="preserve">
         <value>Export cancelled.</value>
@@ -510,7 +471,7 @@ Clearing history before fair drawing helps keep the new member’s chance from b
         <value>Save Settings Backup</value>
     </data>
     <data name="M_SettingsFileType" xml:space="preserve">
-        <value>SecRandom Settings File</value>
+        <value>UNrandom Settings File</value>
     </data>
     <data name="M_SettingsExported" xml:space="preserve">
         <value>Settings exported to the selected location.</value>
@@ -537,7 +498,7 @@ Clearing history before fair drawing helps keep the new member’s chance from b
         <value>Validation passed. Confirm to start importing.</value>
     </data>
     <data name="M_ValidationUnsupported" xml:space="preserve">
-        <value>This file is not a supported SecRandom v3 export and cannot be imported.</value>
+        <value>This file is not a supported UNrandom v3 export and cannot be imported.</value>
     </data>
     <data name="M_ReadOrValidateFailed" xml:space="preserve">
         <value>Failed to read or validate: {0}</value>
@@ -586,15 +547,6 @@ Clearing history before fair drawing helps keep the new member’s chance from b
     </data>
     <data name="M_OpenBrowserFailed" xml:space="preserve">
         <value>Unable to open a browser. Please visit github.com/SECTL/SecRandom manually.</value>
-    </data>
-    <data name="M_InAppUpdateUnsupported" xml:space="preserve">
-        <value>In-app updates are not supported on this platform</value>
-    </data>
-    <data name="M_IosUpdateDeferred" xml:space="preserve">
-        <value>iOS distribution and updates will be provided in a future release. Please get new versions from the project release page.</value>
-    </data>
-    <data name="M_UpdateSecurityNote" xml:space="preserve">
-        <value>Update packages are verified for length and hash against an Ed25519-signed manifest, then handed to the system installer.</value>
     </data>
     <data name="C_StartDraw" xml:space="preserve"><value>Start</value></data>
     <data name="C_RemainingList" xml:space="preserve"><value>View Remaining</value></data>

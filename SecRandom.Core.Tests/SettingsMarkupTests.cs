@@ -26,7 +26,6 @@ public class SettingsMarkupTests
     [InlineData("SecRandom/Views/SettingsPages/More/MoreSettingsPage.axaml", "S_Shortcut_Enable")]
     [InlineData("SecRandom/Views/SettingsPages/Picking/DefaultDrawSettingsPage.axaml", "S_AnimationStyle")]
     [InlineData("SecRandom/Views/SettingsPages/Picking/RollCallDrawSettingsPage.axaml", "S_ReminderText")]
-    [InlineData("SecRandom/Views/SettingsPages/Picking/LotteryDrawSettingsPage.axaml", "S_LotteryImage")]
     [InlineData("SecRandom/Views/SettingsPages/Notification/DefaultNotificationSettingsPage.axaml", "S_Default_DisplayDuration")]
     public void SearchableSettingsUseStableControlNames(string relativePath, string controlId)
     {
@@ -290,9 +289,6 @@ public class SettingsMarkupTests
     [InlineData(
         "SecRandom/Views/SettingsPages/Picking/QuickDrawSettingsPage.axaml",
         "OverrideDisplaySettings,OverrideAnimationSettings,OverrideColorSettings,OverrideStudentImageSettings,OverrideMusicSettings,OverrideVoiceAnnouncementSettings")]
-    [InlineData(
-        "SecRandom/Views/SettingsPages/Picking/LotteryDrawSettingsPage.axaml",
-        "OverrideDisplaySettings,OverrideAnimationSettings,OverrideColorSettings,OverrideStudentImageSettings,OverrideMusicSettings,OverrideVoiceAnnouncementSettings,OverrideReminderSettings")]
     public void DrawOverrideSectionsUseSettingsExpanderItems(string relativePath, string overrideNames)
     {
         var document = System.Xml.Linq.XDocument.Load(GetRepositoryPath(relativePath));
@@ -329,7 +325,6 @@ public class SettingsMarkupTests
     [Theory]
     [InlineData("SecRandom/Views/SettingsPages/Picking/RollCallDrawSettingsPage.axaml")]
     [InlineData("SecRandom/Views/SettingsPages/Picking/QuickDrawSettingsPage.axaml")]
-    [InlineData("SecRandom/Views/SettingsPages/Picking/LotteryDrawSettingsPage.axaml")]
     public void DrawSettingsUseOneOverridableSettingsHeading(string relativePath)
     {
         string markup = File.ReadAllText(GetRepositoryPath(relativePath));
@@ -343,7 +338,6 @@ public class SettingsMarkupTests
     [Theory]
     [InlineData("SecRandom/Views/SettingsPages/Picking/RollCallDrawSettingsPage.axaml.cs")]
     [InlineData("SecRandom/Views/SettingsPages/Picking/QuickDrawSettingsPage.axaml.cs")]
-    [InlineData("SecRandom/Views/SettingsPages/Picking/LotteryDrawSettingsPage.axaml.cs")]
     public void DrawSettingsPagesSubscribeBeforeNormalizing(string relativePath)
     {
         string source = File.ReadAllText(GetRepositoryPath(relativePath));
@@ -359,7 +353,6 @@ public class SettingsMarkupTests
     [Theory]
     [InlineData("SecRandom/Views/SettingsPages/Picking/RollCallDrawSettingsPage.axaml.cs")]
     [InlineData("SecRandom/Views/SettingsPages/Picking/QuickDrawSettingsPage.axaml.cs")]
-    [InlineData("SecRandom/Views/SettingsPages/Picking/LotteryDrawSettingsPage.axaml.cs")]
     public void DrawSettingsPagesDoNotNormalizeInReadOnlyPreview(string relativePath)
     {
         string settingsViewSource = File.ReadAllText(GetRepositoryPath("SecRandom/Views/SettingsView.axaml.cs"));

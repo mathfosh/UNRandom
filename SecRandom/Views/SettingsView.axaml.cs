@@ -511,7 +511,6 @@ public partial class SettingsView : ViewBase, IFANavigationPageFactory, INotifyP
     private static void RefreshMobileDrawSessions()
     {
         IAppHost.TryGetService<RollCallPageViewModel>()?.RefreshAfterProfileChange();
-        IAppHost.TryGetService<LotteryPageViewModel>()?.RefreshAfterProfileChange();
     }
 
     #endregion
@@ -591,14 +590,6 @@ public partial class SettingsView : ViewBase, IFANavigationPageFactory, INotifyP
     private void LogViewerMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
         SelectNavigationItemById("settings.logs");
-    }
-
-    private void FeedbackMenuItem_OnClick(object? sender, RoutedEventArgs e)
-    {
-        FeedbackDrawer drawer = ViewModel.DrawerContent as FeedbackDrawer
-            ?? IAppHost.GetService<FeedbackDrawer>();
-        drawer.Configure(CloseDrawer);
-        OpenDrawer(drawer);
     }
 
     private void AnnouncementsMenuItem_OnClick(object? sender, RoutedEventArgs e)

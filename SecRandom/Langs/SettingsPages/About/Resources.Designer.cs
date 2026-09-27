@@ -143,23 +143,6 @@ namespace SecRandom.Langs.SettingsPages.About {
             }
         }
 
-        /// <summary>
-        ///   Looks up a localized string similar to 在线人数.
-        /// </summary>
-        public static string S_Ack_OnlineUsers {
-            get {
-                return ResourceManager.GetString("S_Ack_OnlineUsers", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to 感谢各位用户的支持，您的使用就是对我们最大的鼓励.
-        /// </summary>
-        public static string S_Ack_OnlineUsers_D {
-            get {
-                return ResourceManager.GetString("S_Ack_OnlineUsers_D", resourceCulture);
-            }
-        }
 
         /// <summary>
         ///   Looks up a localized string similar to 无法加载贡献者名单：{0}.

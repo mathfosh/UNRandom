@@ -125,7 +125,7 @@ internal sealed class DesktopViewHostWindow : FAAppWindow, IViewHost
         _contentHost = new ViewHostControl(hostId);
         _contentHost.Destroyed += (_, _) => Destroyed?.Invoke(this, EventArgs.Empty);
 
-        Title = @"SecRandom";
+        Title = @"UNrandom";
         Width = 1000;
         Height = 600;
         MinWidth = 600;

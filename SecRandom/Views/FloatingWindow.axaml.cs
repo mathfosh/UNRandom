@@ -104,13 +104,12 @@ public partial class FloatingWindow : Window
         var settings = ViewModel.Config.FloatingWindowSettings;
         ApplyWindowSettings(settings);
         ButtonsPanel.Children.Clear();
-        foreach (var controlName in GetVisibleButtonNames(settings, _featureAvailability.IsLotteryEnabled))
+        foreach (var controlName in GetVisibleButtonNames(settings))
         {
             var control = controlName switch
             {
                 "roll_call" => GetRollCallButton(settings),
                 "quick_draw" => GetQuickDrawButton(settings),
-                "lottery" => GetLotteryButton(settings),
                 "timer" => GetTimerButton(settings),
                 _ => null
             };
@@ -185,11 +184,10 @@ public partial class FloatingWindow : Window
         return GetButtonSize(settings.FloatingWindowSize);
     }
 
-    private static IEnumerable<string> GetVisibleButtonNames(FloatingWindowSettingsConfig settings, bool isLotteryEnabled)
+    private static IEnumerable<string> GetVisibleButtonNames(FloatingWindowSettingsConfig settings)
     {
         if (settings.ShowRollCallButton) yield return "roll_call";
         if (settings.ShowQuickDrawButton) yield return "quick_draw";
-        if (settings.ShowLotteryButton && isLotteryEnabled) yield return "lottery";
         if (settings.ShowTimerButton) yield return "timer";
     }
 
@@ -262,18 +260,6 @@ public partial class FloatingWindow : Window
         b.Click += (sender, args) =>
         {
             App.ShowQuickDrawWindow();
-        };
-
-        return b;
-    }
-
-    private static Button GetLotteryButton(FloatingWindowSettingsConfig settings)
-    {
-        var b = CreateButton(FluentIcons.GiftFilled, Langs.Common.Resources.Feat_Lottery, settings);
-
-        b.Click += (sender, args) =>
-        {
-            App.ToggleMainWindow("main.lottery");
         };
 
         return b;

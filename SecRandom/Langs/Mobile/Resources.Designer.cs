@@ -47,7 +47,6 @@ public class Resources
 
     public static string C_AddStudent => ResourceManager.GetString("C_AddStudent", resourceCulture)!;
 
-    public static string C_CheckUpdates => ResourceManager.GetString("C_CheckUpdates", resourceCulture)!;
 
     public static string C_ClearTemporaryRecords => ResourceManager.GetString("C_ClearTemporaryRecords", resourceCulture)!;
 
@@ -55,7 +54,6 @@ public class Resources
 
     public static string C_DrawPrize => ResourceManager.GetString("C_DrawPrize", resourceCulture)!;
 
-    public static string C_InstallUpdate => ResourceManager.GetString("C_InstallUpdate", resourceCulture)!;
 
     public static string C_Lottery => ResourceManager.GetString("C_Lottery", resourceCulture)!;
 
@@ -67,11 +65,9 @@ public class Resources
 
     public static string C_RollCall => ResourceManager.GetString("C_RollCall", resourceCulture)!;
 
-    public static string M_CheckingUpdates => ResourceManager.GetString("M_CheckingUpdates", resourceCulture)!;
 
     public static string M_AboutLicense => ResourceManager.GetString("M_AboutLicense", resourceCulture)!;
 
-    public static string M_CheckUpdatesFailed => ResourceManager.GetString("M_CheckUpdatesFailed", resourceCulture)!;
 
     public static string M_AddPrizesPrompt => ResourceManager.GetString("M_AddPrizesPrompt", resourceCulture)!;
 
@@ -89,11 +85,9 @@ public class Resources
 
     public static string M_CandidateStudents => ResourceManager.GetString("M_CandidateStudents", resourceCulture)!;
 
-    public static string M_DownloadingUpdate => ResourceManager.GetString("M_DownloadingUpdate", resourceCulture)!;
 
     public static string M_EmptyMetadata => ResourceManager.GetString("M_EmptyMetadata", resourceCulture)!;
 
-    public static string M_InstallUpdateFailed => ResourceManager.GetString("M_InstallUpdateFailed", resourceCulture)!;
 
     public static string M_DefaultList => ResourceManager.GetString("M_DefaultList", resourceCulture)!;
 
@@ -159,7 +153,6 @@ public class Resources
 
     public static string M_StartupFailed => ResourceManager.GetString("M_StartupFailed", resourceCulture)!;
 
-    public static string M_UpdateAvailable => ResourceManager.GetString("M_UpdateAvailable", resourceCulture)!;
 
     public static string M_UpToDate => ResourceManager.GetString("M_UpToDate", resourceCulture)!;
 
@@ -183,9 +176,7 @@ public class Resources
 
     public static string P_Settings => ResourceManager.GetString("P_Settings", resourceCulture)!;
 
-    public static string S_AppUpdates => ResourceManager.GetString("S_AppUpdates", resourceCulture)!;
 
-    public static string S_AppUpdates_D => ResourceManager.GetString("S_AppUpdates_D", resourceCulture)!;
 
     public static string S_About => ResourceManager.GetString("S_About", resourceCulture)!;
 
@@ -287,7 +278,6 @@ public class Resources
 
     public static string M_Unknown => ResourceManager.GetString("M_Unknown", resourceCulture)!;
 
-    public static string S_OnlineStatus => ResourceManager.GetString("S_OnlineStatus", resourceCulture)!;
 
     public static string O_Off => ResourceManager.GetString("O_Off", resourceCulture)!;
 
@@ -301,11 +291,6 @@ public class Resources
 
     public static string O_LanguageJapanese => ResourceManager.GetString("O_LanguageJapanese", resourceCulture)!;
 
-    public static string S_Telemetry => ResourceManager.GetString("S_Telemetry", resourceCulture)!;
-
-    public static string S_SentryTelemetry => ResourceManager.GetString("S_SentryTelemetry", resourceCulture)!;
-
-    public static string S_SentryTelemetry_D => ResourceManager.GetString("S_SentryTelemetry_D", resourceCulture)!;
 
     public static string S_Language => ResourceManager.GetString("S_Language", resourceCulture)!;
 
@@ -413,11 +398,8 @@ public class Resources
 
     public static string M_OpenBrowserFailed => ResourceManager.GetString("M_OpenBrowserFailed", resourceCulture)!;
 
-    public static string M_InAppUpdateUnsupported => ResourceManager.GetString("M_InAppUpdateUnsupported", resourceCulture)!;
 
-    public static string M_IosUpdateDeferred => ResourceManager.GetString("M_IosUpdateDeferred", resourceCulture)!;
 
-    public static string M_UpdateSecurityNote => ResourceManager.GetString("M_UpdateSecurityNote", resourceCulture)!;
 
     public static string C_StartDraw => ResourceManager.GetString("C_StartDraw", resourceCulture)!;
     public static string C_RemainingList => ResourceManager.GetString("C_RemainingList", resourceCulture)!;

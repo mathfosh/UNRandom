@@ -1,17 +1,22 @@
+<img src="resources/secrandom-icon-paper.png" width="128" height="128" alt="UNRandom" />
 
 # UNRandom
 
 **基于动态权重的公平随机工具，让抽取与决策告别争议**
+
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](LICENSE)
 
-</div>
+> [!IMPORTANT]
+> 本仓库是 [SecRandom](https://github.com/SECTL/SecRandom) 的衍生版本，由 **李骏健（@mathfosh）** 维护。
+> 原项目由 SECTL 思拓创联开发，原作者 黎泽懿_Aionflux，遵循 GNU GPLv3。
+> 本版本移除了遥测上报、抽奖与更新功能，并调整了抽取设置页。
 
 > [!NOTE]
 > SecRandom 以 GNU GPLv3 协议发布！您可以修改和再发布源代码，但再发布的衍生作品也必须遵循 GNU GPLv3
 
-## SecRandom
+## UNRandom
 
-SecRandom 是面向课堂、团队、活动、决策等场景的公平抽取应用
+UNRandom 是面向课堂、团队、活动、决策等场景的公平抽取应用
 
 ## 软件功能
 
@@ -19,7 +24,6 @@ SecRandom 是面向课堂、团队、活动、决策等场景的公平抽取应�
 
 - **点名**：支持普通随机、历史平衡及重复控制
 - **闪抽**：通过独立悬浮窗快速抽取学生
-- **抽奖**：支持奖品盘和库存抽取，学生与奖品独立管理
 - **丰富呈现**：统一配置动画、结果、语音、音乐和通知，并支持通知失败回退
 
 ### 公平与名单管理

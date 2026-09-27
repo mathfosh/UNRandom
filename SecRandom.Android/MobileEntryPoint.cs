@@ -11,7 +11,6 @@ using CameraView.Platforms.Android;
 using SecRandom.Core.Abstraction;
 using SecRandom.Platforms;
 using SecRandom.Platforms.Abstractions;
-using SecRandom.Services.Telemetry;
 using System.Runtime.Versioning;
 using SecRandom.Mobile;
 
@@ -33,7 +32,6 @@ public class MobileApplication : AvaloniaAndroidApplication<App>
         var isTablet = (screenLayout & ScreenLayout.SizeMask) >= ScreenLayout.SizeLarge;
         var platform = new MobilePlatformServiceRoot(PlatformKind.Android)
         {
-            UpdateInstaller = new AndroidUpdateInstaller(),
             MediaPlayer = new AndroidMobileMediaPlayer(),
             CameraDevices = new AndroidCameraDeviceCatalog(this),
             PathLauncher = AndroidDataDirectoryLauncher.TryOpenPath,
@@ -48,8 +46,8 @@ public class MobileApplication : AvaloniaAndroidApplication<App>
         return base.CustomizeAppBuilder(builder);
     }
 
-    // 未处理异常统一送入 TelemetryRuntimeService；其内部按隐私开关决定是否真正上传。
-    // 钩子在 Host 建立前也可能触发，因此使用 IAppHost.TryGetService 惰性解析。
+    // 未处理异常统一写入平台日志，便于离线排查。
+    // 钩子在 Host 建立前也可能触发，因此不能依赖 DI 容器中的服务。
     private static void RegisterUnhandledExceptionHooks()
     {
         AndroidEnvironment.UnhandledExceptionRaiser += (_, e) =>
@@ -72,17 +70,7 @@ public class MobileApplication : AvaloniaAndroidApplication<App>
     {
         if (OperatingSystem.IsAndroidVersionAtLeast(24))
             global::Android.Util.Log.Error("SecRandom.Mobile", exception.ToString());
-
-        TelemetryRuntimeService? telemetry = IAppHost.TryGetService<TelemetryRuntimeService>();
-        if (telemetry is not null)
-            _ = telemetry.CaptureExceptionAsync(exception);
     }
-}
-
-[ContentProvider(["${applicationId}.updatefileprovider"], Exported = false, GrantUriPermissions = true)]
-[MetaData("android.support.FILE_PROVIDER_PATHS", Resource = "@xml/update_paths")]
-public sealed class UpdateFileProvider : global::AndroidX.Core.Content.FileProvider
-{
 }
 
 [Activity(MainLauncher = true, Exported = true,

@@ -63,12 +63,6 @@
     <data name="S_Ack" xml:space="preserve">
         <value>Acknowledgments</value>
     </data>
-    <data name="S_Ack_OnlineUsers" xml:space="preserve">
-        <value>Online Users</value>
-    </data>
-    <data name="S_Ack_OnlineUsers_D" xml:space="preserve">
-        <value>Thank you for your support; your use of the software is the greatest encouragement we could receive</value>
-    </data>
     <data name="S_Ack_Contributors" xml:space="preserve">
         <value>Contributors</value>
     </data>

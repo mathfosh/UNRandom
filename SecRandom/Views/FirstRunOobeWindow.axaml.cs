@@ -156,29 +156,13 @@ public partial class FirstRunOobeWindow : FAAppWindow
             students => _ = ImportStudentsAsync(students)));
     }
 
-    private void ImportPrizePool_OnClick(object? sender, RoutedEventArgs e)
-    {
-        OpenImportDrawer(new SettingsPages.ListManagement.LotteryListImportView(
-            ViewModel.SelectedPrizeListName,
-            prizes => _ = ImportPrizesAsync(prizes)));
-    }
-
     private void RefreshStudentLists_OnClick(object? sender, RoutedEventArgs e) => ViewModel.RefreshListSelectors();
-
-    private void RefreshPrizeLists_OnClick(object? sender, RoutedEventArgs e) => ViewModel.RefreshListSelectors();
 
     private async void AddStudentList_OnClick(object? sender, RoutedEventArgs e)
     {
         var name = await PromptListNameAsync(LR.C_AddStudentListTitle, LR.C_AddList, LR.C_DefaultStudentListName);
         if (name is not null)
             CreateList(name, ViewModel.StudentListNames, ViewModel.CreateStudentList);
-    }
-
-    private async void AddPrizeList_OnClick(object? sender, RoutedEventArgs e)
-    {
-        var name = await PromptListNameAsync(LR.C_AddPrizeListTitle, LR.C_AddList, LR.C_DefaultPrizeListName);
-        if (name is not null)
-            CreateList(name, ViewModel.PrizeListNames, ViewModel.CreatePrizeList);
     }
 
     private async void RenameStudentList_OnClick(object? sender, RoutedEventArgs e)
@@ -188,27 +172,12 @@ public partial class FirstRunOobeWindow : FAAppWindow
             CreateList(name, ViewModel.StudentListNames, ViewModel.RenameStudentList, ViewModel.SelectedStudentListName);
     }
 
-    private async void RenamePrizeList_OnClick(object? sender, RoutedEventArgs e)
-    {
-        var name = await PromptListNameAsync(LR.C_RenameListTitle, LR.C_RenameList, ViewModel.SelectedPrizeListName);
-        if (name is not null && name != ViewModel.SelectedPrizeListName)
-            CreateList(name, ViewModel.PrizeListNames, ViewModel.RenamePrizeList, ViewModel.SelectedPrizeListName);
-    }
-
     private async void DeleteStudentList_OnClick(object? sender, RoutedEventArgs e)
     {
         if (!await ConfirmDeleteListAsync(ViewModel.SelectedStudentListName, ViewModel.StudentListNames.Count))
             return;
 
         ViewModel.DeleteStudentList();
-    }
-
-    private async void DeletePrizeList_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (!await ConfirmDeleteListAsync(ViewModel.SelectedPrizeListName, ViewModel.PrizeListNames.Count))
-            return;
-
-        ViewModel.DeletePrizeList();
     }
 
     private void CreateList(string name, IEnumerable<string> existingNames, Action<string> action, string? currentName = null)
@@ -289,15 +258,6 @@ public partial class FirstRunOobeWindow : FAAppWindow
         CloseImportDrawer();
     }
 
-    private async Task ImportPrizesAsync(IReadOnlyList<Shared.Models.Profile.Prize> prizes)
-    {
-        if (!await ConfirmListOverwriteAsync(ViewModel.SelectedPrizeListName, ViewModel.SelectedPrizeListCount, prizes.Count))
-            return;
-
-        ViewModel.ImportPrizes(prizes);
-        CloseImportDrawer();
-    }
-
     private async Task<bool> ConfirmListOverwriteAsync(string listName, int currentCount, int importCount)
     {
         if (currentCount == 0)
@@ -316,15 +276,8 @@ public partial class FirstRunOobeWindow : FAAppWindow
 
     private void OpenImportDrawer(Control importView)
     {
-        switch (importView)
-        {
-            case SettingsPages.ListManagement.RollCallListImportView rollCallImport:
-                rollCallImport.CloseHandler = CloseImportDrawer;
-                break;
-            case SettingsPages.ListManagement.LotteryListImportView lotteryImport:
-                lotteryImport.CloseHandler = CloseImportDrawer;
-                break;
-        }
+        if (importView is SettingsPages.ListManagement.RollCallListImportView rollCallImport)
+            rollCallImport.CloseHandler = CloseImportDrawer;
 
         ImportDrawerHost.DrawerContent = importView;
         ImportDrawerHost.IsDrawerOpen = true;

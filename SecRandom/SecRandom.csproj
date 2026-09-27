@@ -18,14 +18,11 @@
 
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" Condition="'$(SecRandomBundleAssetsInAssembly)' == 'true'" />
-        <AvaloniaResource Include="Assets\Updates\release-public-key.txt"
-                          Condition="'$(SecRandomBundleAssetsInAssembly)' != 'true'" />
         <None Update="Assets\**" Condition="'$(SecRandomBundleAssetsInAssembly)' != 'true'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>Always</CopyToPublishDirectory>
             <PublishFolderType>Resource</PublishFolderType>
         </None>
-        <None Remove="Assets\Updates\release-public-key.txt" />
     </ItemGroup>
 
     <ItemGroup>
@@ -464,8 +461,6 @@
         <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3" />
         <PackageReference Include="HotAvalonia" Version="3.1.4" />
         <PackageReference Include="HotAvalonia.Core" Version="3.1.4" />
-        <PackageReference Include="Sentry" Version="6.8.0" />
-        <PackageReference Include="Sentry.Extensions.Logging" Version="6.8.0" />
         <PackageReference Include="QRCoder" Version="1.8.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
         <PackageReference Include="CameraView.Avalonia" Version="1.0.18" />

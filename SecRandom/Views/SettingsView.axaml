@@ -57,7 +57,7 @@
                            Margin="8 0 0 0"
                            IsVisible="{Binding !IsMobile}" />
 
-                    <TextBlock Text="SecRandom"
+                    <TextBlock Text="UNrandom"
                                FontSize="12"
                                VerticalAlignment="Center"
                                IsVisible="{Binding !IsMobile}" />
@@ -322,10 +322,6 @@
                                 <MenuItem Icon="{sr:FluentIcon {sr:Fi MegaphoneFilled}}"
                                           Header="{x:Static ls:Resources.C_Announcements}"
                                           Click="AnnouncementsMenuItem_OnClick" />
-
-                                <MenuItem Icon="{sr:FluentIcon {sr:Fi CommentNoteFilled}}"
-                                          Header="{x:Static ls:Resources.C_MoreOptions_Feedback}"
-                                          Click="FeedbackMenuItem_OnClick" />
                             </MenuFlyout>
                         </Button.Flyout>
                     </Button>

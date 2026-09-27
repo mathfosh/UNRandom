@@ -12,7 +12,7 @@ using LR = SecRandom.Langs.SettingsPages.HistoryManagement.Resources;
 
 namespace SecRandom.Views.SettingsPages.History;
 
-[PageInfo("settings.history.management", FluentIcons.HistoryFilled, "settings.history")]
+[PageInfo("settings.history.management", FluentIcons.HistoryFilled, "settings.history", isHide: true)]
 public partial class HistoryManagementSettingsPage : UserControl
 {
     public HistoryManagementSettingsPage()

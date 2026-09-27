@@ -25,57 +25,6 @@ public sealed class MobileHistoryPageTests
     private static readonly SemaphoreSlim HostGate = new(1, 1);
 
     [AvaloniaFact]
-    public async Task LotteryTabIsHiddenWhenLotteryIsDisabled()
-    {
-        await HostGate.WaitAsync();
-        ServiceProvider? provider = null;
-        try
-        {
-            provider = CreateProvider();
-            IAppHost.Host = new TestHost(provider);
-
-            var page = new MobileHistoryPage(new TestCapabilities(lotteryEnabled: false));
-
-            Assert.Equal(0, page.FindControl<TabStrip>("HistoryTabs")!.SelectedIndex);
-            Assert.False(page.FindControl<TabStripItem>("LotteryTab")!.IsVisible);
-        }
-        finally
-        {
-            IAppHost.Host = null;
-            provider?.Dispose();
-            HostGate.Release();
-        }
-    }
-
-    [AvaloniaFact]
-    public async Task LotteryTabTracksFeatureAvailabilityAndReturnsToRollCall()
-    {
-        await HostGate.WaitAsync();
-        ServiceProvider? provider = null;
-        try
-        {
-            var featureAvailability = new TestFeatureAvailability(lotteryEnabled: true);
-            provider = CreateProvider(featureAvailability);
-            IAppHost.Host = new TestHost(provider);
-            var page = new MobileHistoryPage(new TestCapabilities(lotteryEnabled: true));
-            var tabs = page.FindControl<TabStrip>("HistoryTabs")!;
-            tabs.SelectedIndex = 1;
-
-            featureAvailability.SetLotteryEnabled(false);
-            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
-
-            Assert.False(page.FindControl<TabStripItem>("LotteryTab")!.IsVisible);
-            Assert.Equal(0, tabs.SelectedIndex);
-        }
-        finally
-        {
-            IAppHost.Host = null;
-            provider?.Dispose();
-            HostGate.Release();
-        }
-    }
-
-    [AvaloniaFact]
     public async Task RollCallHistoryRefresh_PreservesSelectionsAndFiltersBySubject()
     {
         await HostGate.WaitAsync();
@@ -124,42 +73,6 @@ public sealed class MobileHistoryPageTests
             Assert.True(viewModel.ShouldShowSubjectColumn);
             var row = Assert.Single(viewModel.Rows);
             Assert.Equal("数学", row.Subject);
-        }
-        finally
-        {
-            IAppHost.Host = null;
-            provider?.Dispose();
-            HostGate.Release();
-        }
-    }
-
-    [AvaloniaFact]
-    public async Task LotteryHistoryRefresh_PreservesPoolAndMode()
-    {
-        await HostGate.WaitAsync();
-        ServiceProvider? provider = null;
-        try
-        {
-            const string poolName = "奖池";
-            var prize = new Prize { RecordId = Guid.NewGuid(), Id = "01", Name = "一等奖" };
-            var history = new PrizeHistory(poolName);
-            history.Prizes[prize.RecordId.ToString("D")] = new History
-            {
-                TotalCount = 1,
-                Histories = [new HistoryItem { DrawTime = new DateTime(2026, 8, 1, 8, 0, 0) }]
-            };
-            provider = CreateProvider(
-                historyQueryService: new TestHistoryQueryService(prizeHistory: history),
-                catalogManager: new TestProfileCatalogManager(prizeList: new PrizeList(poolName) { Prizes = [prize] }));
-            IAppHost.Host = new TestHost(provider);
-
-            var viewModel = provider.GetRequiredService<LotteryHistoryViewModel>();
-            viewModel.SelectedMode = prize.RecordId.ToString("D");
-            viewModel.Refresh();
-
-            Assert.Equal(poolName, viewModel.SelectedPoolName);
-            Assert.Equal(prize.RecordId.ToString("D"), viewModel.SelectedMode);
-            Assert.Single(viewModel.Rows);
         }
         finally
         {
@@ -247,14 +160,12 @@ public sealed class MobileHistoryPageTests
         services.AddSingleton(catalogManager ?? new TestProfileCatalogManager());
         services.AddSingleton(new DrawEngine(configHandler, profileService, NullLogger<DrawEngine>.Instance));
         services.AddTransient<RollCallHistoryViewModel>();
-        services.AddTransient<LotteryHistoryViewModel>();
         return services.BuildServiceProvider();
     }
 
     private sealed class TestCapabilities(bool lotteryEnabled) : IMobileCapabilities
     {
         public bool IsLotteryEnabled { get; } = lotteryEnabled;
-        public bool SupportsInAppUpdate => false;
     }
 
     private sealed class TestFeatureAvailability(bool lotteryEnabled) : IFeatureAvailabilityService

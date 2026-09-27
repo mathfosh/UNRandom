@@ -14,14 +14,12 @@
                   SelectedIndex="0"
                   Theme="{StaticResource TabStripStyle}">
             <TabStripItem Content="{x:Static langs:Resources.Tab_RollCall}" />
-            <TabStripItem Content="{x:Static langs:Resources.Tab_Lottery}" />
         </TabStrip>
 
         <Carousel Grid.Row="1"
                   Classes="animated"
                   SelectedIndex="{Binding #HistoryTabStrip.SelectedIndex}">
             <history:RollCallHistorySettingsPage />
-            <history:LotteryHistorySettingsPage />
         </Carousel>
     </Grid>
 </UserControl>

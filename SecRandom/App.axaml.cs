@@ -19,7 +19,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
-using Sentry;
 using SecRandom.Controls.AttachedSettings;
 using SecRandom.Core;
 using SecRandom.Core.Abstraction;
@@ -57,15 +56,12 @@ using SecRandom.Services.RosterTransfer;
 using SecRandom.Services.Ipc;
 using SecRandom.Services.ImportExport;
 using SecRandom.Services.FirstRun;
-using SecRandom.Services.Feedback;
 using SecRandom.Services.Linkage;
 using SecRandom.Services.Music;
 using SecRandom.Services.Settings;
 using SecRandom.Services.Security;
-using SecRandom.Services.Telemetry;
 using SecRandom.Services.Verification;
 using SecRandom.Services.Voice;
-using SecRandom.Services.Updates;
 using SecRandom.Services.ViewEngine;
 using SecRandom.Services.Plugins;
 using SecRandom.PluginSdk;
@@ -93,11 +89,9 @@ using SecRandom.Views.SettingsPages.LogViewer;
 using SecRandom.Views.SettingsPages.More;
 using SecRandom.Views.SettingsPages.Personalized;
 using SecRandom.Views.SettingsPages.Picking;
-using SecRandom.Views.SettingsPages.Update;
 using SecRandom.Views.SettingsPages.Plugins;
 using DefaultNotificationSettingsPage = SecRandom.Views.SettingsPages.Notification.DefaultNotificationSettingsPage;
 using FloatingWindowSettingsPage = SecRandom.Views.SettingsPages.Personalized.FloatingWindowSettingsPage;
-using LotteryNotificationSettingsPage = SecRandom.Views.SettingsPages.Notification.LotteryNotificationSettingsPage;
 using QuickDrawNotificationSettingsPage = SecRandom.Views.SettingsPages.Notification.QuickDrawNotificationSettingsPage;
 using RollCallNotificationSettingsPage = SecRandom.Views.SettingsPages.Notification.RollCallNotificationSettingsPage;
 using SecuritySettingsPage = SecRandom.Views.SettingsPages.General.SecuritySettingsPage;
@@ -347,8 +341,6 @@ public partial class App : Application
             await host.StartAsync().ConfigureAwait(false);
             if (_mobileStopping || !ReferenceEquals(host, _mobileHost))
                 return;
-
-            await host.Services.GetRequiredService<TelemetryRuntimeService>().InitializeAsync().ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -410,7 +402,6 @@ public partial class App : Application
             await mediaPlayer.StopAsync().ConfigureAwait(false);
             if (mediaPlayer is IDisposable disposableMediaPlayer)
                 disposableMediaPlayer.Dispose();
-            await host.Services.GetRequiredService<TelemetryRuntimeService>().ShutdownAsync().ConfigureAwait(false);
             await host.StopAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
         }
         catch (Exception exception)
@@ -432,8 +423,6 @@ public partial class App : Application
     {
         TrySaveConfigForCrashRecovery();
         ReportMobileException(e.Exception);
-        ObserveTask(CaptureUnhandledExceptionAsync(e.Exception),
-            "Mobile unhandled exception telemetry capture failed.");
         e.Handled = true;
 
         CrashRecoveryPromptOptions? options = CrashRecoveryRuntime.TryCreateCurrentProcessPromptOptions(e.Exception);
@@ -476,7 +465,7 @@ public partial class App : Application
         }
         catch (Exception resourceException)
         {
-            startupFailedText = "SecRandom startup failed: " + resourceException.GetType().Name;
+            startupFailedText = "UNrandom startup failed: " + resourceException.GetType().Name;
         }
 
         return new ScrollViewer
@@ -946,14 +935,6 @@ public partial class App : Application
                         builder.AddConsole(console => { console.FormatterName = @"secrandom"; });
                     }
 
-                    builder.AddSentry(options =>
-                    {
-                        // SDK 生命周期由 TelemetryRuntimeService 按隐私开关统一控制，日志 Provider 只复用已初始化的 SDK。
-                        options.InitializeSdk = false;
-                        options.MinimumEventLevel = LogLevel.Error;
-                        // Sentry Structured Logs 默认关闭；日志 Provider 与 SDK 初始化选项都需要启用。
-                        options.EnableLogs = true;
-                    });
 #if DEBUG
                     builder.SetMinimumLevel(LogLevel.Trace);
 #endif
@@ -997,9 +978,6 @@ public partial class App : Application
                     services.AddHostedService(serviceProvider =>
                         serviceProvider.GetRequiredService<CloudAutomaticBackupService>());
                 }
-                services.AddSingleton<ITelemetrySdkAdapter, SentryTelemetrySdkAdapter>();
-                services.AddSingleton<TelemetryRuntimeService>();
-                services.AddHostedService<OnlineStatusService>();
 
                 // 服务
                 services.AddTransient<RollCallDrawService>();
@@ -1019,8 +997,6 @@ public partial class App : Application
                     if (currentMobilePlatform.KeyboardOcclusionSource is { } keyboardOcclusionSource)
                         services.AddSingleton<IMobileKeyboardOcclusionSource>(keyboardOcclusionSource);
                     services.AddSingleton<MobileDrawMediaService>();
-                    services.AddSingleton<IMobileUpdateInstaller>(currentMobilePlatform.UpdateInstaller);
-                    services.AddHttpClient<MobileUpdateService>();
                 }
 
                 services.AddSingleton<IProfileQueryService, ProfileQueryService>();
@@ -1044,8 +1020,6 @@ public partial class App : Application
                 services.AddSingleton<OobeDataSetupService>();
                 services.AddSingleton<IArchivePostImportHooks, DesktopArchivePostImportHooks>();
                 services.AddSingleton<IImportExportService, ImportExportService>();
-                services.AddSingleton<ISentryFeedbackClient, SentryFeedbackClient>();
-                services.AddSingleton<IUserFeedbackService, UserFeedbackService>();
                 services.AddHostedService<AutomaticBackupService>();
                 services.AddHostedService<TaskBarIconService>();
                 services.AddSingleton<GlobalShortcutService>();
@@ -1053,13 +1027,6 @@ public partial class App : Application
                     serviceProvider.GetRequiredService<GlobalShortcutService>());
                 services.AddSingleton<DesktopIntegrationService>();
                 services.AddSingleton<IExternalLauncher, ExternalLauncher>();
-                services.AddHttpClient("updates", client => client.Timeout = TimeSpan.FromSeconds(30));
-                services.AddSingleton<UpdateCenterService>(serviceProvider => new UpdateCenterService(
-                    serviceProvider.GetRequiredService<MainConfigHandler>(),
-                    serviceProvider.GetRequiredService<ILogger<UpdateCenterService>>(),
-                    serviceProvider.GetRequiredService<IHttpClientFactory>().CreateClient("updates")));
-                services.AddSingleton<IUpdateNotificationService, UpdateNotificationService>();
-                services.AddHostedService<UpdateScheduler>();
                 services.AddSingleton<ProtocolCommandRouter>();
                 services.AddSingleton<ISpeechProvider, SystemSpeechProvider>();
                 services.AddSingleton<ISpeechProvider, EdgeTtsSpeechProvider>();
@@ -1116,15 +1083,11 @@ public partial class App : Application
 
                 services.AddTransient<MainViewModel>();
                 services.AddTransient<SettingsViewModel>();
-                services.AddTransient<FeedbackDrawerViewModel>();
-                services.AddTransient<FeedbackDrawer>();
                 services.AddSingleton<FirstRunOobeViewModel>();
                 services.AddSingleton<RollCallPageViewModel>();
                 services.AddSingleton<QuickDrawPageViewModel>();
-                services.AddSingleton<LotteryPageViewModel>();
                 services.AddTransient<RollCallHistoryViewModel>();
                 services.AddTransient<HomeSettingsPageViewModel>();
-                services.AddTransient<LotteryHistoryViewModel>();
 
                 // 杂项 Views
                 if (isMobile)
@@ -1152,7 +1115,6 @@ public partial class App : Application
                 else
                 {
                     services.AddMainPage<RollCallPage>(Langs.Common.Resources.Feat_RollCall);
-                    services.AddMainPage<LotteryPage>(Langs.Common.Resources.Feat_Lottery);
                     services.AddMainPage<HistoryPage>(Langs.Common.Resources.Feat_History);
                 }
 
@@ -1178,8 +1140,6 @@ public partial class App : Application
                     // 手机没有安全服务支持
                     services.AddSettingsPage<SecuritySettingsPage>(Langs.Common.Resources.Settings_Security);
                 }
-                services.AddSettingsPage<PrivacySettingsPage>(Langs.SettingsPages.General.Privacy.Resources
-                    .Page_Title);
                 services.AddSettingsPage<VerificationSettingsPage>(Langs.SettingsPages.General.Verification
                     .Resources.Page_Title);
                 services.AddSettingsPage<BackupSettingsPage>(Langs.Common.Resources.Settings_Backup);
@@ -1206,19 +1166,8 @@ public partial class App : Application
                     FluentIcons.PeopleListFilled));
                 services.AddSettingsPage<RollCallListSettingsPage>(Langs.SettingsPages.ListManagement.RollCallList
                     .Resources.Page_Title);
-                services.AddSettingsPage<LotteryListSettingsPage>(Langs.SettingsPages.ListManagement.LotteryList
-                    .Resources.Page_Title);
 
-                services.AddGroup(new PageGroupInfo(
-                    Langs.Common.Resources.Settings_Draw, "settings.picking", FluentIcons.SettingsFilled));
-                services.AddSettingsPage<DefaultDrawSettingsPage>(
-                    Langs.SettingsPages.Picking.Resources.Page_Default);
-                services.AddSettingsPage<RollCallDrawSettingsPage>(Langs.SettingsPages.Picking.Resources
-                    .Page_RollCall);
-                services.AddSettingsPage<QuickDrawSettingsPage>(
-                    Langs.SettingsPages.Picking.Resources.Page_QuickDraw);
-                services.AddSettingsPage<LotteryDrawSettingsPage>(
-                    Langs.SettingsPages.Picking.Resources.Page_Lottery);
+                services.AddSettingsPage<DrawSettingsPage>(Langs.Common.Resources.Settings_Draw);
 
                 services.AddGroup(new PageGroupInfo(
                     Langs.Common.Resources.Settings_Notification, "settings.notification",
@@ -1237,8 +1186,6 @@ public partial class App : Application
                         .Settings_RollCallNotification);
                     services.AddSettingsPage<QuickDrawNotificationSettingsPage>(Langs.Common.Resources
                         .Settings_QuickDrawNotification);
-                    services.AddSettingsPage<LotteryNotificationSettingsPage>(Langs.Common.Resources
-                        .Settings_LotteryNotification);
                 }
 
                 services.AddGroup(new PageGroupInfo(
@@ -1246,7 +1193,6 @@ public partial class App : Application
                 services.AddSettingsPage<HistoryManagementSettingsPage>(Langs.Common.Resources
                     .Settings_HistoryManagement);
                 services.AddSettingsPage<RollCallHistorySettingsPage>(Langs.Common.Resources.Feat_RollCallHistory);
-                services.AddSettingsPage<LotteryHistorySettingsPage>(Langs.Common.Resources.Feat_LotteryHistory);
 
                 if (!isMobile)
                 {
@@ -1257,7 +1203,6 @@ public partial class App : Application
 
                 // 底部
                 services.AddSettingsPage<AnnouncementsSettingsPage>(Langs.SettingsView.Resources.C_Announcements);
-                services.AddSettingsPage<UpdateSettingsPage>(Langs.Common.Resources.Settings_Update);
                 services.AddSettingsPage<AboutSettingsPage>(Langs.Common.Resources.Settings_About);
 
                 services.AddSettingsPageSeparator(PageLocation.Bottom, isHide: true);
@@ -1285,7 +1230,7 @@ public partial class App : Application
 
         var logger = IAppHost.GetService<ILogger<App>>();
 
-        logger.LogInformation(@"SecRandom {VERSION} (Codename: {CODENAME})", GlobalConstants.Version,
+        logger.LogInformation(@"UNrandom {VERSION} (Codename: {CODENAME})", GlobalConstants.Version,
             GlobalConstants.CodeName);
         logger.LogInformation(@"Copyright by SECTL(2025~{YEAR})  Licensed under GPL3.0", DateTime.Now.Year);
         logger.LogInformation("Host built.");
@@ -1390,7 +1335,6 @@ public partial class App : Application
 
             _floatingWindow?.CanClose = true;
             TrySaveConfigForCrashRecovery();
-            await ShutdownTelemetryAsync().ConfigureAwait(false);
 
             if (host is not null)
             {
@@ -1483,7 +1427,6 @@ public partial class App : Application
     {
         TrySaveConfigForCrashRecovery();
         TryLogCritical(e.Exception);
-        ObserveTask(CaptureUnhandledExceptionAsync(e.Exception), "Unhandled exception telemetry capture failed.");
 
         TryDisablePluginOnCrash(e.Exception);
 
@@ -1573,30 +1516,10 @@ public partial class App : Application
     }
 
     /// <summary>
-    /// 初始化遥测运行时服务，由 <see cref="StartRuntimeServicesAsync"/> 在 Host 启动前调用。
-    /// </summary>
-    private static async Task InitializeRuntimeServicesAsync()
-    {
-        try
-        {
-            var telemetry = IAppHost.GetService<TelemetryRuntimeService>();
-            await telemetry.InitializeAsync().ConfigureAwait(false);
-            // await SendSentryTestEventAsync(telemetry).ConfigureAwait(false);
-            // Dispatcher.UIThread.Post(() => throw new InvalidOperationException("SENTRY_TEST_FAKE_ERROR_UNHANDLED"));
-        }
-        catch (Exception ex)
-        {
-            IAppHost.TryGetService<ILogger<App>>()?
-                .LogError(ex, "Telemetry initialization failed.");
-        }
-    }
-
-    /// <summary>
-    /// 按顺序启动遥测和 Host，确保 SDK 在 HostedService 启动前就绪。
+    /// 按顺序启动 Host，确保 HostedService 在窗口显示前就绪。
     /// </summary>
     private static async Task StartRuntimeServicesAsync()
     {
-        await InitializeRuntimeServicesAsync().ConfigureAwait(false);
         if (IAppHost.TryGetService<SectlAuthService>() is { } auth)
             await auth.InitializeAsync().ConfigureAwait(false);
         await IAppHost.Host!.StartAsync().ConfigureAwait(false);
@@ -1635,46 +1558,6 @@ public partial class App : Application
         catch
         {
             System.Diagnostics.Debug.WriteLine($"[desktop-startup] {message}\n{exception}");
-        }
-    }
-
-    private static async Task CaptureUnhandledExceptionAsync(Exception exception)
-    {
-        try
-        {
-            TelemetryRuntimeService? telemetry = IAppHost.TryGetService<TelemetryRuntimeService>();
-            if (telemetry is not null)
-                await telemetry.CaptureExceptionAsync(exception).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            IAppHost.TryGetService<ILogger<App>>()?
-                .LogError(ex, "Unhandled exception telemetry capture failed.");
-        }
-    }
-
-    private static async Task SendSentryTestEventAsync(TelemetryRuntimeService telemetry)
-    {
-        var exception = new InvalidOperationException("SENTRY_TEST_FAKE_ERROR");
-        var logger = IAppHost.GetService<ILogger<App>>();
-
-        logger.LogError(exception, "SENTRY_TEST_FAKE_ERROR log event.");
-        await telemetry.CaptureExceptionAsync(exception).ConfigureAwait(false);
-        await telemetry.FlushAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
-    }
-
-    private static async Task ShutdownTelemetryAsync()
-    {
-        try
-        {
-            TelemetryRuntimeService? telemetry = IAppHost.TryGetService<TelemetryRuntimeService>();
-            if (telemetry is not null)
-                await telemetry.ShutdownAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            IAppHost.TryGetService<ILogger<App>>()?
-                .LogError(ex, "Telemetry shutdown failed.");
         }
     }
 
@@ -1792,9 +1675,6 @@ public partial class App : Application
 
     private static async Task ShowMainWindowCoreAsync(string? pageId = null)
     {
-        TelemetryRuntimeService? telemetry = IAppHost.TryGetService<TelemetryRuntimeService>();
-        using var transaction = telemetry?.StartTransaction("ui.main_window", "ui.navigation");
-
         try
         {
             WriteDesktopStartupDiagnostic("Showing main window.");
@@ -1803,7 +1683,7 @@ public partial class App : Application
                 WriteDesktopStartupDiagnostic("Creating main window and view host.");
                 var mainWindow = _mainWindow = new MainWindow(MainWindowSettingsScope.Primary)
                 {
-                    Title = @"SecRandom"
+                    Title = @"UNrandom"
                 };
                 var host = new DesktopWindowViewHost(mainWindow, DesktopViewIds.Main);
                 IAppHost.GetService<DesktopViewHostProvider>().RegisterHost(host);
@@ -1820,12 +1700,10 @@ public partial class App : Application
             WriteDesktopStartupDiagnostic("Main window view displayed.");
             if (!string.IsNullOrWhiteSpace(pageId))
                 MainView.Current?.SelectNavigationItemById(pageId);
-            transaction?.Finish(SpanStatus.Ok);
         }
         catch (Exception ex)
         {
             WriteDesktopStartupDiagnostic("Main window display failed.", ex);
-            transaction?.Finish(ex, SpanStatus.InternalError);
             IAppHost.TryGetService<ILogger<App>>()?.LogError(ex, "Failed to show main window.");
             throw;
         }
@@ -1833,9 +1711,6 @@ public partial class App : Application
 
     public static void ToggleMainWindow(string? pageId = null)
     {
-        if (pageId == "main.lottery" && !IAppHost.GetService<IFeatureAvailabilityService>().IsLotteryEnabled)
-            return;
-
         ObserveTask(IAppHost.GetService<ISecurityService>().AuthorizeAsync(
             SecurityOperation.ToggleMainWindow,
             () => ShowMainWindowCoreAsync(pageId)), "Main window authorization failed.");
@@ -1848,9 +1723,6 @@ public partial class App : Application
 
     private static async Task SetMainWindowVisibilityCoreAsync(string action, string? pageId)
     {
-        if (pageId == "main.lottery" && !IAppHost.GetService<IFeatureAvailabilityService>().IsLotteryEnabled)
-            return;
-
         var shouldShow = action switch
         {
             "show" => true,
@@ -1983,9 +1855,6 @@ public partial class App : Application
 
     private static async Task ShowSettingsWindowCoreAsync()
     {
-        TelemetryRuntimeService? telemetry = IAppHost.TryGetService<TelemetryRuntimeService>();
-        using var transaction = telemetry?.StartTransaction("ui.settings_window", "ui.navigation");
-
         try
         {
             if (_runtimeServicesStartupTask is { } startupTask)
@@ -1995,7 +1864,7 @@ public partial class App : Application
             {
                 var settingsWindow = _settingsWindow = new MainWindow(MainWindowSettingsScope.Settings)
                 {
-                    Title = @"SecRandom"
+                    Title = @"UNrandom"
                 };
                 var host = new DesktopWindowViewHost(settingsWindow, DesktopViewIds.Settings);
                 IAppHost.GetService<DesktopViewHostProvider>().RegisterHost(host);
@@ -2009,11 +1878,9 @@ public partial class App : Application
             await IAppHost.GetService<IViewEngine>().ShowAsync(
                 DesktopViewIds.Settings,
                 new ViewShowOptions { HostId = DesktopViewIds.Settings }).ConfigureAwait(true);
-            transaction?.Finish(SpanStatus.Ok);
         }
         catch (Exception ex)
         {
-            transaction?.Finish(ex, SpanStatus.InternalError);
             IAppHost.TryGetService<ILogger<App>>()?.LogError(ex, "Failed to show settings window.");
             throw;
         }
@@ -2095,19 +1962,13 @@ public partial class App : Application
 
     private static async Task ShowQuickDrawWindowAsync()
     {
-        TelemetryRuntimeService? telemetry = IAppHost.TryGetService<TelemetryRuntimeService>();
-        using var transaction = telemetry?.StartTransaction("ui.quick_draw_window", "ui.navigation");
-
         try
         {
             _quickDrawNotificationSettings = null;
             var quickDraw = IAppHost.GetService<QuickDrawPageViewModel>();
             quickDraw.ClearNotificationPresentation();
             if (!quickDraw.IsDrawing && !await quickDraw.AuthorizeTriggeredDrawAsync())
-            {
-                transaction?.Finish(SpanStatus.PermissionDenied);
                 return;
-            }
 
             var showBuiltInNotificationAnimation = IAppHost.GetService<NotificationService>()
                 .UsesBuiltInNotificationService(NotificationSettingsType.QuickDraw);
@@ -2116,7 +1977,6 @@ public partial class App : Application
                 HideQuickDrawNotificationWindow();
                 if (!quickDraw.IsDrawing)
                     await quickDraw.StartAuthorizedTriggeredDrawAsync();
-                transaction?.Finish(SpanStatus.Ok);
                 return;
             }
 
@@ -2124,11 +1984,9 @@ public partial class App : Application
                 await quickDraw.StartAuthorizedTriggeredDrawAsync();
             else if (_quickDrawWindow is { IsVisible: true })
                 _quickDrawWindow.Activate();
-            transaction?.Finish(SpanStatus.Ok);
         }
         catch (Exception ex)
         {
-            transaction?.Finish(ex, SpanStatus.InternalError);
             IAppHost.TryGetService<ILogger<App>>()?.LogError(ex, "Failed to show quick draw window.");
             throw;
         }
@@ -2142,7 +2000,7 @@ public partial class App : Application
         _quickDrawWindow = new Window
         {
             Content = IAppHost.GetService<QuickDrawPage>(),
-            Title = @"SecRandom",
+            Title = @"UNrandom",
             MinWidth = 280,
             MinHeight = 160,
             SizeToContent = SizeToContent.WidthAndHeight,

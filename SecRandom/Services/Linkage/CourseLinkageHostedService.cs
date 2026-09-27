@@ -84,7 +84,6 @@ public sealed class CourseLinkageHostedService(
         {
             IAppHost.TryGetService<RollCallPageViewModel>()?.ResetForCourseLinkage();
             IAppHost.TryGetService<QuickDrawPageViewModel>()?.ResetForCourseLinkage();
-            IAppHost.TryGetService<LotteryPageViewModel>()?.ResetForCourseLinkage();
         });
         logger.LogInformation("已执行课前联动重置：课程={CourseName}。", linkageService.Snapshot.NextCourse?.Name);
     }

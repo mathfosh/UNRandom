@@ -3,8 +3,8 @@ using SecRandom;
 
 [assembly: AssemblyVersion(GitInfo.AssemblyVersion)]
 [assembly: AssemblyInformationalVersion($"{GitInfo.Tag}+{GitInfo.CommitHash}")]
-[assembly: AssemblyTitle("SecRandom")]
-[assembly: AssemblyProduct("SecRandom")]
+[assembly: AssemblyTitle("UNrandom")]
+[assembly: AssemblyProduct("UNrandom")]
 
 #if NETCOREAPP
 // [assembly: SupportedOSPlatform("Windows")]

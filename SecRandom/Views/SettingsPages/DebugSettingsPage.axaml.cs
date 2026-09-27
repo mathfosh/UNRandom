@@ -19,7 +19,6 @@ using SecRandom.Core.Services.Config;
 using SecRandom.Controls.AttachedSettings;
 using SecRandom.Services.Linkage;
 using SecRandom.Services.CrashRecovery;
-using SecRandom.Services.Updates;
 using SecRandom.Shared;
 using SecRandom.Views;
 using DebugResources = SecRandom.Langs.SettingsPages.Debug.DebugStrings;
@@ -32,8 +31,6 @@ public partial class DebugSettingsPage : UserControl, INotifyPropertyChanged
 {
     private readonly MainConfigHandler _configHandler = IAppHost.GetService<MainConfigHandler>();
     private readonly CourseLinkageService _courseLinkage = IAppHost.GetService<CourseLinkageService>();
-    private readonly UpdateCenterService _updateCenter = IAppHost.GetService<UpdateCenterService>();
-    private string _updateDiagnostics = string.Empty;
     private string _linkageAndNotificationDiagnostics = string.Empty;
     private string _platformDiagnostics = string.Empty;
     private string _dataAndPathDiagnostics = string.Empty;
@@ -46,12 +43,6 @@ public partial class DebugSettingsPage : UserControl, INotifyPropertyChanged
         InitializeComponent();
         InternalSettingsToggle.IsCheckedChanged += InternalSettingsToggle_OnIsCheckedChanged;
         RefreshDiagnostics();
-    }
-
-    public string UpdateDiagnostics
-    {
-        get => _updateDiagnostics;
-        private set => SetDiagnostic(ref _updateDiagnostics, value, nameof(UpdateDiagnostics));
     }
 
     public string LinkageAndNotificationDiagnostics
@@ -178,14 +169,6 @@ public partial class DebugSettingsPage : UserControl, INotifyPropertyChanged
 
     private void RefreshDiagnostics()
     {
-        var updateSettings = _configHandler.Data.UpdateSettings;
-        UpdateDiagnostics = $"{T("C_CurrentVersion")}: {_updateCenter.CurrentVersion}\n"
-                            + $"{T("C_UpdateChannel")}: {updateSettings.UpdateChannel}\n"
-                            + $"{T("C_CheckPhase")}: {_updateCenter.Phase}\n"
-                            + $"{T("C_Status")}: {_updateCenter.Status}\n"
-                            + $"{T("C_LastCheck")}: {FormatTime(updateSettings.LastCheckTime)}\n"
-                            + $"{T("C_AvailableVersion")}: {EmptyAsDash(_updateCenter.AvailableVersion)}";
-
         var snapshot = _courseLinkage.Snapshot;
         var notification = _configHandler.Data.NotificationSettings.Default;
         LinkageAndNotificationDiagnostics = $"{T("C_LinkageSource")}: {_courseLinkage.Settings.DataSource}\n"

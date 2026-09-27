@@ -2,7 +2,7 @@
 
 ## 1. 启动流程概览
 
-**入口** → **语言初始化** → **DI容器构建** → **遥测初始化** → **Host启动** → **窗口创建**
+**入口** → **语言初始化** → **DI容器构建** → **Host启动** → **窗口创建**
 
 ### 关键文件
 - SecRandom.Desktop/Program.cs - Avalonia 入口点
@@ -13,7 +13,7 @@
 1. Initialize() - 预加载配置文件，设置应用语言（在 DI 之前）
 2. OnFrameworkInitializationCompleted() - 调用 BuildHost() 构建 DI 容器
 3. BuildHost() - 注册所有服务、页面、ViewModel
-4. StartRuntimeServicesAsync() - 先初始化遥测，再启动 Host
+4. StartRuntimeServicesAsync() - 启动 Host
 5. InitializeApp() - 配置任务栏图标和事件
 
 ### 窗口架构
@@ -34,7 +34,6 @@
 MainConfigModel (根配置对象)
 ├─ General.Basic - 语言、启动选项、窗口置顶
 ├─ General.Backup - 备份配置
-├─ General.PrivacySettings - 遥测和在线状态
 ├─ Appearance - 主题、字体、颜色
 ├─ RollCallSettings - 点名设置
 ├─ QuickDrawSettings - 快速抽取
@@ -63,7 +62,7 @@ ConfigHandlerBase<T>
 **单例服务 (AddSingleton)**:
 - ConfigServiceBase, MainConfigHandler
 - IProfileService, SettingsSearchService
-- IPluginManager, TelemetryRuntimeService
+- IPluginManager
 - IVoiceAnnouncementService
 
 **瞬态服务 (AddTransient)**:
@@ -74,7 +73,6 @@ ConfigHandlerBase<T>
 **托管服务 (AddHostedService)**:
 - PluginHostedService - 插件生命周期
 - PluginCatalogHostedService - 插件目录扫描
-- OnlineStatusService - 在线状态上报（BackgroundService 后台循环）
 - TaskBarIconService - 任务栏图标管理
 
 ### IHostedService 使用模式
@@ -131,7 +129,6 @@ protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 - 自动创建不存在的目录
 
 ### 锁机制
-- OnlineStatusService 使用 SemaphoreSlim 防止并发刷新 IP 缓存
 - 配置保存使用锁保护（在 ConfigHandlerBase 中）
 
 ### 启动选项
@@ -155,7 +152,6 @@ public interface IAppHost
 
 ### 配置变更响应
 - ConfigHandlerBase 自动保存机制（PropertyChanged）
-- OnlineStatusService 监听隐私设置变更清空缓存
 - App.RefreshPersonalizedSettings() 应用主题/字体变更
 
 ### 生命周期钩子
@@ -165,7 +161,7 @@ public interface IAppHost
 - Dispatcher.UIThread.UnhandledException - 全局异常捕获
 
 ### 关闭和重启
-- **Stop()**: 保存配置 → 停止遥测 → 停止Host → 关闭桌面生命周期
+- **Stop()**: 保存配置 → 停止Host → 关闭桌面生命周期
 - **Restart()**: Stop(不关闭生命周期) → 启动新进程 → 关闭当前进程
 - FloatingWindow 使用 CanClose 标志防止意外关闭
 
@@ -181,9 +177,7 @@ public BasicSettingsConfig LegacyBasicOnLoad
 `
 
 ### 隐私设置迁移
-- 旧字段: Basic.telemetry_enabled, Basic.telemetry_mode
-- 新位置: General.PrivacySettings.SentryTelemetryEnabled, OnlineStatusMode
-- 加载时自动提取并迁移
+- 遥测与在线状态上报相关字段（`Basic.telemetry_enabled`、`Basic.telemetry_mode`）已随功能一并移除；遗留配置文件中的同名字段在反序列化时被忽略
 
 ---
 
@@ -192,5 +186,5 @@ public BasicSettingsConfig LegacyBasicOnLoad
 - DesktopConfigService.cs (配置持久化)
 - ConfigHandlerBase.cs (配置处理器基类)
 - ProfileService.cs (档案服务实现)
-- OnlineStatusService.cs (后台服务示例)
+- UpdateScheduler.cs (后台服务示例)
 - PagesRegistryExtensions.cs (页面注册)

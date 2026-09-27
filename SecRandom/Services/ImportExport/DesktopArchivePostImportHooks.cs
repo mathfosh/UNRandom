@@ -7,7 +7,6 @@ using SecRandom.Core.Services.Config;
 using SecRandom.Services.Config;
 using SecRandom.Services.Desktop;
 using SecRandom.Services.Linkage;
-using SecRandom.Services.Telemetry;
 
 namespace SecRandom.Services.ImportExport;
 
@@ -38,8 +37,6 @@ public sealed class DesktopArchivePostImportHooks(
         IAppHost.TryGetService<IFeatureAvailabilityService>()?.Refresh();
         IAppHost.TryGetService<GlobalShortcutService>()?.Refresh();
         IAppHost.TryGetService<ShortcutService>()?.Refresh();
-        _ = IAppHost.TryGetService<TelemetryRuntimeService>()?.RefreshAsync();
-        IAppHost.TryGetService<OnlineStatusService>()?.Refresh();
         _ = IAppHost.TryGetService<CourseLinkageService>()?.RefreshAsync();
         var warnings = new List<string>();
         desktopIntegrationService.EnsureConfiguredIntegrations();

@@ -30,7 +30,6 @@ public sealed class GlobalShortcutService : IHostedService
     private readonly MainConfigHandler _configHandler;
     private MoreSettingsConfig _settings;
     private readonly RollCallPageViewModel _rollCall;
-    private readonly LotteryPageViewModel _lottery;
     private readonly IFeatureAvailabilityService _featureAvailability;
     private readonly ILogger<GlobalShortcutService> _logger;
     private readonly ManualResetEventSlim _threadReady = new();
@@ -44,14 +43,12 @@ public sealed class GlobalShortcutService : IHostedService
     public GlobalShortcutService(
         MainConfigHandler configHandler,
         RollCallPageViewModel rollCall,
-        LotteryPageViewModel lottery,
         IFeatureAvailabilityService featureAvailability,
         ILogger<GlobalShortcutService> logger)
     {
         _configHandler = configHandler;
         _settings = configHandler.Data.MoreSettings;
         _rollCall = rollCall;
-        _lottery = lottery;
         _featureAvailability = featureAvailability;
         _logger = logger;
     }
@@ -213,10 +210,6 @@ public sealed class GlobalShortcutService : IHostedService
 
     private void Execute(ShortcutAction action)
     {
-        if (!_featureAvailability.IsLotteryEnabled && action is ShortcutAction.OpenLotteryPage
-            or ShortcutAction.IncreaseLotteryCount or ShortcutAction.DecreaseLotteryCount or ShortcutAction.StartLottery)
-            return;
-
         switch (action)
         {
             case ShortcutAction.OpenRollCallPage:
@@ -225,26 +218,14 @@ public sealed class GlobalShortcutService : IHostedService
             case ShortcutAction.QuickDraw:
                 App.ShowQuickDrawWindow();
                 break;
-            case ShortcutAction.OpenLotteryPage:
-                App.ToggleMainWindow("main.lottery");
-                break;
             case ShortcutAction.IncreaseRollCallCount:
                 _rollCall.IncreaseCountFromShortcut();
                 break;
             case ShortcutAction.DecreaseRollCallCount:
                 _rollCall.DecreaseCountFromShortcut();
                 break;
-            case ShortcutAction.IncreaseLotteryCount:
-                _lottery.IncreaseCountFromShortcut();
-                break;
-            case ShortcutAction.DecreaseLotteryCount:
-                _lottery.DecreaseCountFromShortcut();
-                break;
             case ShortcutAction.StartRollCall:
                 ObserveActionAsync(_rollCall.ToggleDrawFromShortcutAsync(), "点名快捷键执行失败。");
-                break;
-            case ShortcutAction.StartLottery:
-                ObserveActionAsync(_lottery.ToggleDrawFromShortcutAsync(), "抽奖快捷键执行失败。");
                 break;
         }
     }
@@ -274,13 +255,6 @@ public sealed class GlobalShortcutService : IHostedService
             new(ShortcutAction.DecreaseRollCallCount, _settings.DecreaseRollCallCountShortcut),
             new(ShortcutAction.StartRollCall, _settings.StartRollCallShortcut)
         };
-        if (_featureAvailability.IsLotteryEnabled)
-        {
-            bindings.Add(new(ShortcutAction.OpenLotteryPage, _settings.OpenLotteryPageShortcut));
-            bindings.Add(new(ShortcutAction.IncreaseLotteryCount, _settings.IncreaseLotteryCountShortcut));
-            bindings.Add(new(ShortcutAction.DecreaseLotteryCount, _settings.DecreaseLotteryCountShortcut));
-            bindings.Add(new(ShortcutAction.StartLottery, _settings.StartLotteryShortcut));
-        }
         return bindings.ToArray();
     }
 
@@ -347,13 +321,9 @@ public sealed class GlobalShortcutService : IHostedService
     {
         OpenRollCallPage,
         QuickDraw,
-        OpenLotteryPage,
         IncreaseRollCallCount,
         DecreaseRollCallCount,
-        IncreaseLotteryCount,
-        DecreaseLotteryCount,
-        StartRollCall,
-        StartLottery
+        StartRollCall
     }
 
     [StructLayout(LayoutKind.Sequential)]

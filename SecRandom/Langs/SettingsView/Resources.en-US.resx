@@ -138,41 +138,13 @@
   <data name="C_Close"><value>Close</value></data>
   <data name="C_CopySessionCode"><value>Copy session code</value></data>
     <data name="M_ImportUnsupportedTitle"><value>Unsupported Import File</value></data>
-    <data name="M_ImportUnsupportedContent"><value>This is not a supported SecRandom v3 export file.</value></data>
+    <data name="M_ImportUnsupportedContent"><value>This is not a supported UNrandom v3 export file.</value></data>
     <data name="M_ImportUnsupportedUnknownVersion"><value>Unknown</value></data>
     <data name="M_ImportUnsupportedVersion"><value>Detected export version: {0}&#xA;&#xA;{1}&#xA;&#xA;No recovery snapshot was created and no data was changed.</value></data>
     <data name="M_NavigateFailed" xml:space="preserve">
         <value>An error occurred during navigation.</value>
     </data>
-    <data name="C_MoreOptions_Feedback"><value>Feedback</value></data>
     <data name="C_Announcements"><value>Announcements</value></data>
-    <data name="C_Feedback_Title"><value>Feedback</value></data>
-    <data name="C_Feedback_CloseTemporary"><value>Close for now</value></data>
-    <data name="C_Feedback_Bug"><value>Bug</value></data>
-    <data name="C_Feedback_Feature"><value>Feature / experience improvement</value></data>
-    <data name="C_Feedback_Summary"><value>Summary</value></data>
-    <data name="C_Feedback_SummaryPlaceholder"><value>Summarize the issue or suggestion in one sentence</value></data>
-    <data name="C_Feedback_ContactEmail"><value>Contact email (optional)</value></data>
-    <data name="C_Feedback_ContactEmailPlaceholder"><value>Used only if we need to reply</value></data>
-    <data name="C_Feedback_CrashReport"><value>Crash report</value></data>
-    <data name="C_Feedback_Expected"><value>Expected behavior</value></data>
-    <data name="C_Feedback_ExpectedPlaceholder"><value>Describe what you expected to happen.</value></data>
-    <data name="C_Feedback_Actual"><value>Actual result</value></data>
-    <data name="C_Feedback_ActualPlaceholder"><value>Describe what actually happened.</value></data>
-    <data name="C_Feedback_Reproduce"><value>Steps to reproduce</value></data>
-    <data name="C_Feedback_ReproducePlaceholder"><value>1. First...&#10;2. Then...&#10;3. ...</value></data>
-    <data name="C_Feedback_Motivation"><value>Background and motivation</value></data>
-    <data name="C_Feedback_MotivationPlaceholder"><value>Why is this needed? What situation would it help with?</value></data>
-    <data name="C_Feedback_Request"><value>Feature or improvement requested</value></data>
-    <data name="C_Feedback_RequestPlaceholder"><value>Describe the desired feature, workflow, or experience improvement as specifically as possible.</value></data>
-    <data name="C_Feedback_DiagnosticNotice"><value>A redacted ZIP attachment equivalent to Export diagnostic data is generated and uploaded automatically when you submit, to help investigate the issue.</value></data>
-    <data name="C_Feedback_Cancel"><value>Cancel feedback</value></data>
-    <data name="C_Feedback_Submit"><value>Submit feedback</value></data>
-    <data name="M_Feedback_Required"><value>Fill in all required fields before submitting feedback.</value></data>
-    <data name="M_Feedback_InvalidEmail"><value>Enter a valid contact email or leave it blank.</value></data>
-    <data name="M_Feedback_Success"><value>Feedback submitted. Thank you for your help.</value></data>
-    <data name="M_Feedback_DiagnosticTooLarge"><value>The diagnostic ZIP exceeds the upload limit, so feedback was not submitted. Clear logs and try again, or use GitHub.</value></data>
-    <data name="M_Feedback_Failed"><value>Feedback submission failed. Try again later or use GitHub.</value></data>
   <data name="C_TransferFileExport" xml:space="preserve"><value>Export to file</value></data>
   <data name="C_TransferFileImport" xml:space="preserve"><value>Import from file</value></data>
   <data name="C_TransferQuickQrExport" xml:space="preserve"><value>Quick QR export to another device</value></data>
@@ -184,7 +156,7 @@
   <data name="C_TransferQuickQrTitle" xml:space="preserve"><value>Quick QR transfer</value></data>
   <data name="C_TransferOfflineQrTitle" xml:space="preserve"><value>Offline QR transfer</value></data>
   <data name="C_TransferSessionCodeTitle" xml:space="preserve"><value>Session-code transfer</value></data>
-  <data name="C_TransferPortalHint" xml:space="preserve"><value>Scan on another device or open SecRandom Sync to receive the transfer.</value></data>
+  <data name="C_TransferPortalHint" xml:space="preserve"><value>Scan on another device or open UNrandom Sync to receive the transfer.</value></data>
   <data name="C_TransferStatusFrames" xml:space="preserve"><value>Frame {0} / {1}</value></data>
   <data name="C_TransferStatusReady" xml:space="preserve"><value>Ready to receive a transfer</value></data>
   <data name="C_TransferStatusReceiving" xml:space="preserve"><value>Receiving transfer</value></data>

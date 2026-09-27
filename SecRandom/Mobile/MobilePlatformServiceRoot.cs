@@ -37,7 +37,6 @@ public sealed class MobilePlatformServiceRoot : IPlatformServiceRoot, IWindowFea
     /// <summary>
     /// Platform heads inject their update installer here before PlatformStartupContext.Set runs.
     /// </summary>
-    public IMobileUpdateInstaller UpdateInstaller { get; set; } = new UnsupportedMobileUpdateInstaller();
 
     /// <summary>
     /// Platform heads provide native local-media and TTS playback before startup.

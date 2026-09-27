@@ -112,7 +112,6 @@ internal sealed class Program
             assetRoot,
             new HashSet<string>(StringComparer.Ordinal)
             {
-                "Updates/release-public-key.txt",
                 "Plugins/plugin-market-public-key.txt"
             });
 
