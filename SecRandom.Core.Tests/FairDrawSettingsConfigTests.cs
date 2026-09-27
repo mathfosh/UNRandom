@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -135,10 +135,6 @@ public class FairDrawSettingsConfigTests
         {
             DefaultDrawSettings = new DefaultDrawSettingsConfig
             {
-                AnimationStyle = DrawAnimationStyleMode.DirectRotate
-            },
-            RollCallSettings = new RollCallSettingsConfig
-            {
                 AnimationStyle = DrawAnimationStyleMode.FadeFloat
             },
             LotterySettings = new LotterySettingsConfig
@@ -152,8 +148,7 @@ public class FairDrawSettingsConfigTests
 
         Assert.Contains("animation_style", json);
         Assert.NotNull(restored);
-        Assert.Equal(DrawAnimationStyleMode.DirectRotate, restored.DefaultDrawSettings.AnimationStyle);
-        Assert.Equal(DrawAnimationStyleMode.FadeFloat, restored.RollCallSettings.AnimationStyle);
+        Assert.Equal(DrawAnimationStyleMode.FadeFloat, restored.DefaultDrawSettings.AnimationStyle);
         Assert.Equal(DrawAnimationStyleMode.HorizontalShake, restored.LotterySettings.AnimationStyle);
     }
 
@@ -304,7 +299,7 @@ public class FairDrawSettingsConfigTests
             MinWeight = 20,
             MaxWeight = 20
         });
-        configA.RollCallSettings.DrawType = DrawType.Fair;
+        configA.DefaultDrawSettings.DrawType = DrawType.Fair;
 
         var configB = BuildConfig(new FairDrawSettingsConfig
         {
@@ -319,7 +314,7 @@ public class FairDrawSettingsConfigTests
             MinWeight = 0.5,
             MaxWeight = 5.0
         });
-        configB.RollCallSettings.DrawType = DrawType.Fair;
+        configB.DefaultDrawSettings.DrawType = DrawType.Fair;
 
         using var hostA = BuildHost(configA, new TestProfileService(history));
         using var hostB = BuildHost(configB, new TestProfileService(history));
@@ -365,7 +360,7 @@ public class FairDrawSettingsConfigTests
             FairDrawTime = false,
             ColdStartEnabled = false
         });
-        config.RollCallSettings.DrawType = DrawType.Fair;
+        config.DefaultDrawSettings.DrawType = DrawType.Fair;
 
         using var host = BuildHost(config, new TestProfileService(history));
 
@@ -383,7 +378,6 @@ public class FairDrawSettingsConfigTests
         return new MainConfigModel
         {
             FairDrawSettings = fairSettings,
-            RollCallSettings = new RollCallSettingsConfig(),
             LotterySettings = new LotterySettingsConfig(),
             DefaultDrawSettings = new DefaultDrawSettingsConfig()
         };

@@ -75,7 +75,7 @@ public partial class DrawEngine
         string courseName = "")
     {
         var hasBaseCandidates = false;
-        var repeatThreshold = GetStudentRepeatThreshold(drawSettingsType);
+        var repeatThreshold = GetStudentRepeatThreshold();
         var historyCache = BuildStudentHistoryCache(StudentList.Students, courseName);
         _logger.LogInformation("开始学生抽取：请求数量={Count}，设置类型={SettingsType}，重复阈值={RepeatThreshold}，抽取类型={DrawType}.",
             count, drawSettingsType, repeatThreshold, executionPolicy.DrawType);
@@ -219,43 +219,26 @@ public partial class DrawEngine
         return DrawWithBehindSceneWeights(prepared.WeightedCandidates, count);
     }
 
-    private int GetStudentRepeatThreshold(DrawSettingsType drawSettingsType)
+    private int GetStudentRepeatThreshold()
     {
-        var (drawMode, halfRepeat) = drawSettingsType switch
-        {
-            DrawSettingsType.RollCall => (ConfigData.RollCallSettings.DrawMode, ConfigData.RollCallSettings.HalfRepeat),
-            DrawSettingsType.QuickDraw => (ConfigData.QuickDrawSettings.DrawMode, ConfigData.QuickDrawSettings.HalfRepeat),
-            _ => (ConfigData.RollCallSettings.DrawMode, ConfigData.RollCallSettings.HalfRepeat)
-        };
-
-        return DrawRepeatPolicy.ResolveThreshold(drawMode, halfRepeat);
+        // 点名与闪抽共用默认抽取设置，重复策略不再随抽取通道变化。
+        return DrawRepeatPolicy.ResolveThreshold(ConfigData.DefaultDrawSettings.DrawMode,
+            ConfigData.DefaultDrawSettings.HalfRepeat);
     }
 
     private DrawType GetStudentDrawType(DrawSettingsType drawSettingsType)
     {
-        if (drawSettingsType == DrawSettingsType.RollCall)
-            return string.Equals(ConfigData.RollCallSettings.AlgorithmId, "builtin.random", StringComparison.OrdinalIgnoreCase)
-                ? DrawType.Random
-                : DrawType.Fair;
-        if (drawSettingsType == DrawSettingsType.QuickDraw)
-            return string.Equals(ConfigData.QuickDrawSettings.AlgorithmId, "builtin.random", StringComparison.OrdinalIgnoreCase)
-                ? DrawType.Random
-                : DrawType.Fair;
+        if (drawSettingsType == DrawSettingsType.Lottery)
+            return ConfigData.DefaultDrawSettings.DrawType;
 
-        return drawSettingsType switch
-        {
-            DrawSettingsType.RollCall => ConfigData.RollCallSettings.DrawType,
-            DrawSettingsType.QuickDraw => ConfigData.QuickDrawSettings.DrawType,
-            _ => ConfigData.RollCallSettings.DrawType
-        };
+        return string.Equals(ConfigData.DefaultDrawSettings.AlgorithmId, "builtin.random",
+            StringComparison.OrdinalIgnoreCase)
+            ? DrawType.Random
+            : DrawType.Fair;
     }
 
-    private string? GetStudentAlgorithmId(DrawSettingsType drawSettingsType) => drawSettingsType switch
-    {
-        DrawSettingsType.RollCall => ConfigData.RollCallSettings.AlgorithmId,
-        DrawSettingsType.QuickDraw => ConfigData.QuickDrawSettings.AlgorithmId,
-        _ => null
-    };
+    private string? GetStudentAlgorithmId(DrawSettingsType drawSettingsType) =>
+        drawSettingsType == DrawSettingsType.Lottery ? null : ConfigData.DefaultDrawSettings.AlgorithmId;
 
     private List<WeightedCandidate<Student>> BuildStudentWeightedCandidates(
         List<Student> usable,

@@ -60,15 +60,6 @@ namespace SecRandom.Langs.SettingsPages.Picking {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 启用覆盖.
-        /// </summary>
-        public static string C_EnableOverride {
-            get {
-                return ResourceManager.GetString("C_EnableOverride", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to 淡入.
         /// </summary>
         public static string C_FadeIn {
@@ -456,38 +447,11 @@ namespace SecRandom.Langs.SettingsPages.Picking {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 默认抽取设置.
-        /// </summary>
-        public static string Page_Default {
-            get {
-                return ResourceManager.GetString("Page_Default", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to 抽奖抽取设置.
         /// </summary>
         public static string Page_Lottery {
             get {
                 return ResourceManager.GetString("Page_Lottery", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 闪抽抽取设置.
-        /// </summary>
-        public static string Page_QuickDraw {
-            get {
-                return ResourceManager.GetString("Page_QuickDraw", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 点名抽取设置.
-        /// </summary>
-        public static string Page_RollCall {
-            get {
-                return ResourceManager.GetString("Page_RollCall", resourceCulture);
             }
         }
         
@@ -909,8 +873,6 @@ namespace SecRandom.Langs.SettingsPages.Picking {
         public static string S_LotteryAlgorithm_D => ResourceManager.GetString("S_LotteryAlgorithm_D", resourceCulture);
         public static string S_RollCallAlgorithm => ResourceManager.GetString("S_RollCallAlgorithm", resourceCulture);
         public static string S_RollCallAlgorithm_D => ResourceManager.GetString("S_RollCallAlgorithm_D", resourceCulture);
-        public static string S_QuickDrawAlgorithm => ResourceManager.GetString("S_QuickDrawAlgorithm", resourceCulture);
-        public static string S_QuickDrawAlgorithm_D => ResourceManager.GetString("S_QuickDrawAlgorithm_D", resourceCulture);
         public static string O_AlgorithmFair => ResourceManager.GetString("O_AlgorithmFair", resourceCulture);
         public static string O_AlgorithmRandom => ResourceManager.GetString("O_AlgorithmRandom", resourceCulture);
         public static string O_AlgorithmInventory => ResourceManager.GetString("O_AlgorithmInventory", resourceCulture);
@@ -1615,15 +1577,6 @@ namespace SecRandom.Langs.SettingsPages.Picking {
         public static string Section_Music {
             get {
                 return ResourceManager.GetString("Section_Music", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 可覆盖的设置.
-        /// </summary>
-        public static string Section_Overridable {
-            get {
-                return ResourceManager.GetString("Section_Overridable", resourceCulture);
             }
         }
         

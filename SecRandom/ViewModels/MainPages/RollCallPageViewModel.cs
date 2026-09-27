@@ -107,7 +107,7 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
         _drawAudioService = drawAudioService;
         _notificationService = notificationService;
 
-        ResultText = ReminderSettings.ReminderText;
+        ResultText = DrawSettings.ReminderText;
         if (App.IsDesktop && !OperatingSystem.IsIOS())
         {
             _studentListWatcher = CreateStudentListWatcher();
@@ -116,7 +116,6 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
         StudentListNames.CollectionChanged += StudentListNamesOnCollectionChanged;
         ResultItems.CollectionChanged += (_, _) => OnPropertyChanged(nameof(ResultText));
 
-        Config.RollCallSettings.PropertyChanged += SettingsOnPropertyChanged;
         Config.DefaultDrawSettings.PropertyChanged += SettingsOnPropertyChanged;
         Config.MoreSettings.PropertyChanged += SettingsOnPropertyChanged;
         Config.Appearance.PropertyChanged += SettingsOnPropertyChanged;
@@ -145,37 +144,19 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
     public string CountSummary => string.Format(SR.M_CountSummaryFormat, TotalCount, RemainingCount);
     public string ResultText { get; private set; }
     public IBrush ReminderBrush => BuildReminderBrush();
-    public double ResultFontSize => DisplaySettings.FontSize;
-    public double ReminderFontSize => ReminderSettings.ReminderFontSize;
+    public double ResultFontSize => DrawSettings.FontSize;
+    public double ReminderFontSize => DrawSettings.ReminderFontSize;
     public FontFamily ResultFontFamily => BuildResultFontFamily();
-    public bool IsResultCardStyle => DisplaySettings.DisplayStyle == DisplayStyleMode.Card;
-    public bool AnimationEnabled => AnimationSettings.Animation != AnimationMode.NoAnimation;
-    public DrawAnimationStyleMode AnimationStyle => AnimationSettings.AnimationStyle;
+    public bool IsResultCardStyle => DrawSettings.DisplayStyle == DisplayStyleMode.Card;
+    public bool AnimationEnabled => DrawSettings.Animation != AnimationMode.NoAnimation;
+    public DrawAnimationStyleMode AnimationStyle => DrawSettings.AnimationStyle;
     public int AnimationDuration => 250;
-    public int PreviewAnimationDuration => AnimationSettings.Animation == AnimationMode.AutoPlay
-        ? Math.Clamp(AnimationSettings.AnimationInterval, 1, 10000)
+    public int PreviewAnimationDuration => DrawSettings.Animation == AnimationMode.AutoPlay
+        ? Math.Clamp(DrawSettings.AnimationInterval, 1, 10000)
         : 80;
 
-    private DrawSettingsConfigBase DisplaySettings =>
-        Config.GetOverrideDrawSettings(DrawSettingsType.RollCall, OverridableDrawSettingsType.Display);
-
-    private DrawSettingsConfigBase AnimationSettings =>
-        Config.GetOverrideDrawSettings(DrawSettingsType.RollCall, OverridableDrawSettingsType.Animation);
-
-    private DrawSettingsConfigBase ColorSettings =>
-        Config.GetOverrideDrawSettings(DrawSettingsType.RollCall, OverridableDrawSettingsType.Color);
-
-    private DrawSettingsConfigBase StudentImageSettings =>
-        Config.GetOverrideDrawSettings(DrawSettingsType.RollCall, OverridableDrawSettingsType.StudentImage);
-
-    private DrawSettingsConfigBase ReminderSettings =>
-        Config.GetOverrideDrawSettings(DrawSettingsType.RollCall, OverridableDrawSettingsType.Reminder);
-
-    private DrawSettingsConfigBase MusicSettings =>
-        Config.GetOverrideDrawSettings(DrawSettingsType.RollCall, OverridableDrawSettingsType.Music);
-
-    private DrawSettingsConfigBase VoiceAnnouncementSettings =>
-        Config.GetOverrideDrawSettings(DrawSettingsType.RollCall, OverridableDrawSettingsType.VoiceAnnouncement);
+    // 点名与闪抽共用默认抽取设置，显示、动画、颜色、音乐等视图参数统一从这里读取。
+    private DrawSettingsConfigBase DrawSettings => Config.DefaultDrawSettings;
 
     private StudentList? CurrentStudentList => _profileService.CurrentStudentList;
     private StudentHistory? CurrentStudentHistory => _profileService.CurrentStudentHistory;
@@ -188,9 +169,9 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
         {
             _profileService.LoadStudentProfile(value);
             EnsureRestartTemporaryRecordsCleared(value);
-            if (Config.RollCallSettings.DefaultClass != value)
+            if (Config.DefaultDrawSettings.DefaultClass != value)
             {
-                Config.RollCallSettings.DefaultClass = value;
+                Config.DefaultDrawSettings.DefaultClass = value;
                 _configHandler.Save();
             }
         }
@@ -264,7 +245,7 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
         ResultItems.Clear();
         _rollCallDrawService.Reset(CurrentGroupScope, CurrentGenderScope);
         IsResultVisible = false;
-        ResultText = ReminderSettings.ReminderText;
+        ResultText = DrawSettings.ReminderText;
         StatusText = SR.M_ResetDone;
         if (showToast)
             MainView.ShowSuccessToast(SR.M_ResetDone);
@@ -322,7 +303,7 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
             var courseName = _linkageDrawCoordinator.GetCourseName();
             var drawTask = _rollCallDrawService.DrawAsync(new RollCallDrawRequest(
                 SelectedStudentListName, CurrentGroupScope, CurrentGenderScope, count, courseName));
-            var previewTask = ShowPreviewAsync(candidates, count, MusicSettings.AnimationMusic);
+            var previewTask = ShowPreviewAsync(candidates, count, DrawSettings.AnimationMusic);
             List<Student> drawnStudents;
             try
             {
@@ -333,7 +314,7 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
                 drawnStudents = drawResult.Students.ToList();
                 if (drawCompletedFirst && !previewTask.IsCompleted)
                     await PlayAnimationMusicAsync(DrawMusicAttachedSettingsResolver.GetAnimationMusic(
-                        drawnStudents.FirstOrDefault(), MusicSettings.AnimationMusic)).ConfigureAwait(true);
+                        drawnStudents.FirstOrDefault(), DrawSettings.AnimationMusic)).ConfigureAwait(true);
 
                 await previewTask.ConfigureAwait(true);
             }
@@ -366,7 +347,7 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
                     SelectedStudentListName,
                     drawnStudents);
 
-            if (_voiceAnnouncementService is not null && VoiceAnnouncementSettings.VoiceAnnouncementEnabled)
+            if (_voiceAnnouncementService is not null && DrawSettings.VoiceAnnouncementEnabled)
                 await _voiceAnnouncementService.SpeakStudentsAsync(drawnStudents).ConfigureAwait(false);
         }
         finally
@@ -428,7 +409,7 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
                 StudentListNames.Add(config.Name);
             }
 
-            var defaultClass = Config.RollCallSettings.DefaultClass;
+            var defaultClass = Config.DefaultDrawSettings.DefaultClass;
             var currentName = _profileService.StudentListConfig?.Name ?? string.Empty;
             var selected = StudentListNames.Contains(previousName)
                 ? previousName
@@ -473,7 +454,6 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
         StopPreview();
         _ = _drawAudioService?.StopAnimationMusicAsync(0, immediate: true);
         StudentListNames.CollectionChanged -= StudentListNamesOnCollectionChanged;
-        Config.RollCallSettings.PropertyChanged -= SettingsOnPropertyChanged;
         Config.DefaultDrawSettings.PropertyChanged -= SettingsOnPropertyChanged;
         Config.MoreSettings.PropertyChanged -= SettingsOnPropertyChanged;
         Config.Appearance.PropertyChanged -= SettingsOnPropertyChanged;
@@ -532,7 +512,7 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
             RefreshResultItems();
 
         if (!IsResultVisible)
-            ResultText = ReminderSettings.ReminderText;
+            ResultText = DrawSettings.ReminderText;
 
         OnPropertyChanged(nameof(ResultFontSize));
         OnPropertyChanged(nameof(ReminderFontSize));
@@ -561,7 +541,7 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
 
     private async Task ShowPreviewAsync(IReadOnlyList<Student> candidates, int count, string animationMusic)
     {
-        if (AnimationSettings.Animation == AnimationMode.NoAnimation)
+        if (DrawSettings.Animation == AnimationMode.NoAnimation)
             return;
 
         await PlayAnimationMusicAsync(animationMusic).ConfigureAwait(true);
@@ -569,10 +549,10 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
         var previewCts = new CancellationTokenSource();
         _previewCts = previewCts;
         var token = previewCts.Token;
-        var isManualStop = AnimationSettings.Animation == AnimationMode.ManualStop;
+        var isManualStop = DrawSettings.Animation == AnimationMode.ManualStop;
         var iterations = isManualStop
             ? int.MaxValue
-            : Math.Clamp(AnimationSettings.AutoplayCount, 1, 999);
+            : Math.Clamp(DrawSettings.AutoplayCount, 1, 999);
         var delay = PreviewAnimationDuration;
 
         IsDrawing = true;
@@ -620,7 +600,7 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
         _lastResultStudents.Clear();
         ResultItems.Clear();
         IsResultVisible = false;
-        ResultText = ReminderSettings.ReminderText;
+        ResultText = DrawSettings.ReminderText;
         OnPropertyChanged(nameof(ResultText));
     }
 
@@ -687,7 +667,7 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
 
     private void EnsureRestartTemporaryRecordsCleared(string listName)
     {
-        if (Config.RollCallSettings.ClearRecord == ClearRecordMode.Restarted)
+        if (Config.DefaultDrawSettings.ClearRecord == ClearRecordMode.Restarted)
             _temporaryRecordService.ClearStudentListOnce(listName);
     }
 
@@ -728,7 +708,7 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
     private IEnumerable<Student> GetEligibleCandidates(IEnumerable<Student>? candidates = null)
     {
         var source = candidates ?? GetVisibleStudents();
-        var threshold = DrawRepeatPolicy.ResolveThreshold(Config.RollCallSettings.DrawMode, Config.RollCallSettings.HalfRepeat);
+        var threshold = DrawRepeatPolicy.ResolveThreshold(Config.DefaultDrawSettings.DrawMode, Config.DefaultDrawSettings.HalfRepeat);
         var counts = _temporaryRecordService.GetStudentCounts(SelectedStudentListName, CurrentGenderScope, CurrentGroupScope);
         return DrawCandidateFilter.FilterEligibleStudents(source, CurrentGroupScope, CurrentGenderScope, counts, threshold);
     }
@@ -737,7 +717,7 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
 
     private bool HasReachedRepeatLimit(Student student)
     {
-        var threshold = DrawRepeatPolicy.ResolveThreshold(Config.RollCallSettings.DrawMode, Config.RollCallSettings.HalfRepeat);
+        var threshold = DrawRepeatPolicy.ResolveThreshold(Config.DefaultDrawSettings.DrawMode, Config.DefaultDrawSettings.HalfRepeat);
         var counts = _temporaryRecordService.GetStudentCounts(SelectedStudentListName, CurrentGenderScope, CurrentGroupScope);
         return DrawRepeatPolicy.HasReachedLimit(counts.GetValueOrDefault(ProfileRecordIdentity.EnsureRecordId(student)), threshold);
     }
@@ -774,16 +754,16 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
             student.Group,
             student.Gender,
             student.Tags,
-            DisplaySettings.ShowTags && !string.IsNullOrWhiteSpace(student.Tags),
+            DrawSettings.ShowTags && !string.IsNullOrWhiteSpace(student.Tags),
             IsResultCardStyle,
             accentBrush,
             DrawColorHelper.ResolveTextBrush(accentBrush, Config.Appearance.Theme),
             BuildResultOpacity(weight),
-            DisplaySettings.ShowWeightTransparency,
+            DrawSettings.ShowWeightTransparency,
             $"权重 {weight:0.##}",
             image,
-            StudentImageSettings.StudentImage,
-            StudentImageSettings.StudentImagePosition,
+            DrawSettings.StudentImage,
+            DrawSettings.StudentImagePosition,
             AvatarInitialResolver.Resolve(student.Name, student.Id));
     }
 
@@ -802,7 +782,7 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
     {
         var id = FormatNumericId(student.Id, _studentIdPadWidth);
         var name = student.Name.Trim();
-        return DisplaySettings.DisplayFormat switch
+        return DrawSettings.DisplayFormat switch
         {
             DisplayFormatMode.Id => string.IsNullOrWhiteSpace(id) ? name : id,
             DisplayFormatMode.Name => string.IsNullOrWhiteSpace(name) ? id : name,
@@ -812,15 +792,15 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
 
     private IBrush BuildReminderBrush()
     {
-        var color = ReminderSettings.ReminderTextColor;
-        color = Color.FromArgb((byte)Math.Clamp(ReminderSettings.ReminderTextOpacity * 255 / 100, 0, 255),
+        var color = DrawSettings.ReminderTextColor;
+        color = Color.FromArgb((byte)Math.Clamp(DrawSettings.ReminderTextOpacity * 255 / 100, 0, 255),
             color.R, color.G, color.B);
         return new SolidColorBrush(color);
     }
 
     private double BuildDisplayWeight(Student student)
     {
-        if (Config.RollCallSettings.DrawType != DrawType.Fair)
+        if (Config.DefaultDrawSettings.DrawType != DrawType.Fair)
             return 1;
 
         return _drawEngine.CalculateStudentWeight(GetVisibleStudents().ToList(), courseName: _linkageDrawCoordinator.GetCourseName())
@@ -830,7 +810,7 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
 
     private double BuildResultOpacity(double weight)
     {
-        if (!DisplaySettings.ShowWeightTransparency || Config.RollCallSettings.DrawType != DrawType.Fair)
+        if (!DrawSettings.ShowWeightTransparency || Config.DefaultDrawSettings.DrawType != DrawType.Fair)
             return 1;
 
         return Math.Clamp(0.42 + Math.Min(weight, 3) / 3 * 0.58, 0.42, 1);
@@ -839,8 +819,8 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
     private IBrush? ResolveAccentBrush()
     {
         return DrawColorHelper.ResolveAccentBrush(
-            ColorSettings.AnimationColorTheme,
-            ColorSettings.AnimationFixedColor,
+            DrawSettings.AnimationColorTheme,
+            DrawSettings.AnimationFixedColor,
             Config.Appearance.Theme);
     }
 
@@ -887,9 +867,9 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
     {
         return _drawAudioService?.StartAnimationMusicAsync(
             animationMusic,
-            MusicSettings.AnimationMusicVolume,
-            MusicSettings.AnimationMusicFadeIn,
-            MusicSettings.AnimationMusicLoop) ?? Task.CompletedTask;
+            DrawSettings.AnimationMusicVolume,
+            DrawSettings.AnimationMusicFadeIn,
+            DrawSettings.AnimationMusicLoop) ?? Task.CompletedTask;
     }
 
     private async Task PlayResultMusicAsync(Student? musicTarget)
@@ -898,17 +878,17 @@ public sealed partial class RollCallPageViewModel : ViewModelBase, IDisposable
             return;
 
         await _drawAudioService.TransitionToResultMusicAsync(
-            DrawMusicAttachedSettingsResolver.GetResultMusic(musicTarget, MusicSettings.ResultMusic),
-            MusicSettings.ResultMusicVolume,
-            MusicSettings.ResultMusicFadeIn,
-            MusicSettings.ResultMusicFadeOut,
-            MusicSettings.AnimationMusicFadeOut).ConfigureAwait(false);
+            DrawMusicAttachedSettingsResolver.GetResultMusic(musicTarget, DrawSettings.ResultMusic),
+            DrawSettings.ResultMusicVolume,
+            DrawSettings.ResultMusicFadeIn,
+            DrawSettings.ResultMusicFadeOut,
+            DrawSettings.AnimationMusicFadeOut).ConfigureAwait(false);
     }
 
     private FontFamily BuildResultFontFamily()
     {
-        var font = DisplaySettings.UseGlobalFont == UseGlobalFontMode.Custom
-            ? DisplaySettings.CustomFont
+        var font = DrawSettings.UseGlobalFont == UseGlobalFontMode.Custom
+            ? DrawSettings.CustomFont
             : Config.Appearance.Font;
 
         if (string.Equals(font, "MiSans", StringComparison.OrdinalIgnoreCase))

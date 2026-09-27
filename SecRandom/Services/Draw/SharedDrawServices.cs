@@ -45,8 +45,8 @@ public sealed class RollCallDrawService(
         var students = profileService.CurrentStudentList?.Students ?? [];
         var candidates = students.Where(student => DrawCandidateFilter.MatchesScope(student, group, gender))
             .OrderForList().ToArray();
-        var threshold = DrawRepeatPolicy.ResolveThreshold(configHandler.Data.RollCallSettings.DrawMode,
-            configHandler.Data.RollCallSettings.HalfRepeat);
+        var threshold = DrawRepeatPolicy.ResolveThreshold(configHandler.Data.DefaultDrawSettings.DrawMode,
+            configHandler.Data.DefaultDrawSettings.HalfRepeat);
         var remaining = DrawCandidateFilter.FilterEligibleStudents(candidates, group, gender,
                 temporaryRecords.GetStudentCounts(GetListName(), gender, group), threshold)
             .OrderForList().ToArray();
@@ -63,7 +63,7 @@ public sealed class RollCallDrawService(
         if (string.IsNullOrWhiteSpace(name) || string.Equals(name, GetListName(), StringComparison.Ordinal))
             return;
 
-        if (configHandler.Data.RollCallSettings.ClearRecord == ClearRecordMode.Restarted)
+        if (configHandler.Data.DefaultDrawSettings.ClearRecord == ClearRecordMode.Restarted)
             temporaryRecords.ClearStudentListOnce(name);
         profileService.LoadStudentProfile(name);
         profileCatalogManager.SetDefaultStudentList(name);
@@ -95,7 +95,7 @@ public sealed class RollCallDrawService(
             GetListName(),
             request.Group,
             request.Gender,
-            (int)configHandler.Data.RollCallSettings.DrawType,
+            (int)configHandler.Data.DefaultDrawSettings.DrawType,
             weights,
             request.CourseName));
         return new RollCallDrawResult(outcome.Winners, outcome.ProofId, drawRoundId, outcome.FrozenWeights);
@@ -187,7 +187,7 @@ public sealed class LotteryDrawService(
     {
         if (string.IsNullOrWhiteSpace(name) || string.Equals(name, GetStudentListName(), StringComparison.Ordinal))
             return;
-        if (configHandler.Data.RollCallSettings.ClearRecord == ClearRecordMode.Restarted)
+        if (configHandler.Data.DefaultDrawSettings.ClearRecord == ClearRecordMode.Restarted)
             temporaryRecords.ClearStudentListOnce(name);
         profileService.LoadStudentProfile(name);
         profileCatalogManager.SetDefaultStudentList(name);
@@ -227,7 +227,7 @@ public sealed class LotteryDrawService(
             request.Group,
             request.Gender,
             (int)configHandler.Data.LotterySettings.DrawType,
-            (int)configHandler.Data.RollCallSettings.DrawType,
+            (int)configHandler.Data.DefaultDrawSettings.DrawType,
             request.CourseName));
         return new LotteryDrawResult(prizes.Winners, assigned, prizes.ProofId, roundId);
     }
@@ -243,8 +243,8 @@ public sealed class LotteryDrawService(
     {
         if (string.IsNullOrWhiteSpace(selectedList))
             return [];
-        var threshold = DrawRepeatPolicy.ResolveThreshold(configHandler.Data.RollCallSettings.DrawMode,
-            configHandler.Data.RollCallSettings.HalfRepeat);
+        var threshold = DrawRepeatPolicy.ResolveThreshold(configHandler.Data.DefaultDrawSettings.DrawMode,
+            configHandler.Data.DefaultDrawSettings.HalfRepeat);
         return DrawCandidateFilter.FilterEligibleStudents(profileService.CurrentStudentList?.Students ?? [], group, gender,
             temporaryRecords.GetStudentCounts(GetStudentListName(), gender, group), threshold).ToArray();
     }

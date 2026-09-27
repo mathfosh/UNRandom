@@ -184,10 +184,10 @@ internal sealed class ProfileCatalogManager(
 
     public void SetDefaultStudentList(string name)
     {
-        if (string.IsNullOrWhiteSpace(name) || configHandler.Data.RollCallSettings.DefaultClass == name)
+        if (string.IsNullOrWhiteSpace(name) || configHandler.Data.DefaultDrawSettings.DefaultClass == name)
             return;
 
-        configHandler.Data.RollCallSettings.DefaultClass = name;
+        configHandler.Data.DefaultDrawSettings.DefaultClass = name;
         configHandler.Save();
     }
 
@@ -355,8 +355,8 @@ internal sealed class ProfileCatalogManager(
 
             if (isStudent)
             {
-                if (configHandler.Data.RollCallSettings.DefaultClass == oldName)
-                    configHandler.Data.RollCallSettings.DefaultClass = newName;
+                if (configHandler.Data.DefaultDrawSettings.DefaultClass == oldName)
+                    configHandler.Data.DefaultDrawSettings.DefaultClass = newName;
                 if (isActive)
                     profileService.LoadStudentProfile(newName, saveCurrent: false);
             }

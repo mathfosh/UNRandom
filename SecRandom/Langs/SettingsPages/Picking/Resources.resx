@@ -1,12 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
-  <data name="Page_Default" xml:space="preserve"><value>默认抽取设置</value></data>
-  <data name="Page_RollCall" xml:space="preserve"><value>点名抽取设置</value></data>
-  <data name="Page_QuickDraw" xml:space="preserve"><value>闪抽抽取设置</value></data>
   <data name="Page_Lottery" xml:space="preserve"><value>抽奖抽取设置</value></data>
   <data name="Section_Draw" xml:space="preserve"><value>抽取设置</value></data>
   <data name="Section_Display" xml:space="preserve"><value>显示设置</value></data>
@@ -14,7 +11,6 @@
   <data name="Section_Color" xml:space="preserve"><value>颜色设置</value></data>
   <data name="Section_StudentImage" xml:space="preserve"><value>成员头像设置</value></data>
   <data name="Section_Reminder" xml:space="preserve"><value>提示语设置</value></data>
-  <data name="C_EnableOverride" xml:space="preserve"><value>启用覆盖</value></data>
   <data name="S_DrawMode" xml:space="preserve"><value>抽取模式</value></data>
   <data name="S_DrawMode_D" xml:space="preserve"><value>控制重复抽取记录的处理方式</value></data>
   <data name="S_HalfRepeat" xml:space="preserve"><value>半重复阈值</value></data>
@@ -29,8 +25,6 @@
   <data name="S_LotteryAlgorithm_D" xml:space="preserve"><value>选择用于生成奖品候选池的算法</value></data>
   <data name="S_RollCallAlgorithm" xml:space="preserve"><value>点名算法</value></data>
   <data name="S_RollCallAlgorithm_D" xml:space="preserve"><value>选择用于生成成员候选池的算法</value></data>
-  <data name="S_QuickDrawAlgorithm" xml:space="preserve"><value>点名算法</value></data>
-  <data name="S_QuickDrawAlgorithm_D" xml:space="preserve"><value>选择闪抽使用的点名算法</value></data>
   <data name="O_AlgorithmFair" xml:space="preserve"><value>公平抽取</value></data>
   <data name="O_AlgorithmRandom" xml:space="preserve"><value>随机抽取</value></data>
   <data name="O_AlgorithmInventory" xml:space="preserve"><value>按剩余数量</value></data>
@@ -139,9 +133,6 @@
   <data name="O_PrizeHyphenName" xml:space="preserve"><value>奖品-名称</value></data>
   <data name="O_PrizeBreakGroup" xml:space="preserve"><value>奖品/分组</value></data>
   <data name="O_PrizeHyphenGroup" xml:space="preserve"><value>奖品-分组</value></data>
-  <data name="Section_Overridable" xml:space="preserve">
-    <value>可覆盖设置</value>
-  </data>
   <data name="Section_Music" xml:space="preserve">
     <value>音乐设置</value>
   </data>

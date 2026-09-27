@@ -23,8 +23,8 @@ public class SettingsMarkupTests
     [Theory]
     [InlineData("SecRandom/Views/SettingsPages/General/BackupSettingsPage.axaml", "S_Includes")]
     [InlineData("SecRandom/Views/SettingsPages/More/MoreSettingsPage.axaml", "S_Shortcut_Enable")]
-    [InlineData("SecRandom/Views/SettingsPages/Picking/DefaultDrawSettingsPage.axaml", "S_AnimationStyle")]
-    [InlineData("SecRandom/Views/SettingsPages/Picking/RollCallDrawSettingsPage.axaml", "S_ReminderText")]
+    [InlineData("SecRandom/Views/SettingsPages/Picking/DrawSettingsPage.axaml", "S_AnimationStyle")]
+    [InlineData("SecRandom/Views/SettingsPages/Picking/DrawSettingsPage.axaml", "S_ReminderText")]
     [InlineData("SecRandom/Views/SettingsPages/Notification/DefaultNotificationSettingsPage.axaml", "S_Default_DisplayDuration")]
     public void SearchableSettingsUseStableControlNames(string relativePath, string controlId)
     {
@@ -186,12 +186,12 @@ public class SettingsMarkupTests
     }
 
     [Fact]
-    public void QuickDrawSettingsUseNotificationDisplayDurationOnly()
+    public void DrawSettingsUseNotificationDisplayDurationOnly()
     {
         string markup = File.ReadAllText(GetRepositoryPath(
-            "SecRandom/Views/SettingsPages/Picking/QuickDrawSettingsPage.axaml"));
+            "SecRandom/Views/SettingsPages/Picking/DrawSettingsPage.axaml"));
         string settings = File.ReadAllText(GetRepositoryPath(
-            "SecRandom.Core/Models/SubConfigs/Picking/QuickDrawSettingsConfig.cs"));
+            "SecRandom.Core/Models/SubConfigs/Picking/DefaultDrawSettingsConfig.cs"));
 
         Assert.DoesNotContain("S_AutoCloseTime", markup, StringComparison.Ordinal);
         Assert.DoesNotContain("AutoCloseTime", settings, StringComparison.Ordinal);
@@ -281,85 +281,45 @@ public class SettingsMarkupTests
         Assert.Contains("skipPreview = !showBuiltInNotificationAnimation;", viewModelSource, StringComparison.Ordinal);
     }
 
-    [Theory]
-    [InlineData(
-        "SecRandom/Views/SettingsPages/Picking/RollCallDrawSettingsPage.axaml",
-        "OverrideDisplaySettings,OverrideAnimationSettings,OverrideColorSettings,OverrideStudentImageSettings,OverrideMusicSettings,OverrideVoiceAnnouncementSettings,OverrideReminderSettings")]
-    [InlineData(
-        "SecRandom/Views/SettingsPages/Picking/QuickDrawSettingsPage.axaml",
-        "OverrideDisplaySettings,OverrideAnimationSettings,OverrideColorSettings,OverrideStudentImageSettings,OverrideMusicSettings,OverrideVoiceAnnouncementSettings")]
-    public void DrawOverrideSectionsUseSettingsExpanderItems(string relativePath, string overrideNames)
+    [Fact]
+    public void DrawSettingsPageDropsOverrideSections()
     {
-        var document = System.Xml.Linq.XDocument.Load(GetRepositoryPath(relativePath));
+        string markup = File.ReadAllText(GetRepositoryPath(
+            "SecRandom/Views/SettingsPages/Picking/DrawSettingsPage.axaml"));
 
-        foreach (string overrideName in overrideNames.Split(','))
-        {
-            string expandedBinding = $"{{Binding Settings.{overrideName}, Mode=OneWay}}";
-            var section = document.Descendants().SingleOrDefault(element =>
-                element.Name.LocalName is "FASettingsExpander" or "DrawMusicSettingsExpander"
-                && (string?)element.Attribute("IsExpanded") == expandedBinding);
-            Assert.True(section is not null, $"{relativePath} is missing the {overrideName} override expander.");
-
-            // 自定义 DrawMusicSettingsExpander 的行定义在其自身的 axaml 中，单独校验。
-            if (section!.Name.LocalName == "DrawMusicSettingsExpander")
-            {
-                var controlDocument = System.Xml.Linq.XDocument.Load(GetRepositoryPath(
-                    "SecRandom/Views/SettingsPages/Picking/DrawMusicSettingsExpander.axaml"));
-                var controlRows = controlDocument.Root!.Elements()
-                    .Where(element => !element.Name.LocalName.EndsWith(".Footer", StringComparison.Ordinal))
-                    .ToList();
-                Assert.NotEmpty(controlRows);
-                Assert.All(controlRows, row => Assert.Equal("FASettingsExpanderItem", row.Name.LocalName));
-                continue;
-            }
-
-            var rows = section.Elements()
-                .Where(element => element.Name.LocalName != "FASettingsExpander.Footer")
-                .ToList();
-            Assert.NotEmpty(rows);
-            Assert.All(rows, row => Assert.Equal("FASettingsExpanderItem", row.Name.LocalName));
-        }
+        // 点名与闪抽配置合一后，统一页面不再有覆盖开关与可覆盖设置分组。
+        Assert.DoesNotContain("Override", markup, StringComparison.Ordinal);
+        Assert.DoesNotContain("Section_Overridable", markup, StringComparison.Ordinal);
+        Assert.DoesNotContain("C_EnableOverride", markup, StringComparison.Ordinal);
+        Assert.Contains("Text=\"{x:Static lp:Resources.Section_Display}\"", markup, StringComparison.Ordinal);
+        Assert.Contains("Text=\"{x:Static lp:Resources.Section_Animation}\"", markup, StringComparison.Ordinal);
+        Assert.Contains("Text=\"{x:Static lp:Resources.Section_Color}\"", markup, StringComparison.Ordinal);
     }
 
-    [Theory]
-    [InlineData("SecRandom/Views/SettingsPages/Picking/RollCallDrawSettingsPage.axaml")]
-    [InlineData("SecRandom/Views/SettingsPages/Picking/QuickDrawSettingsPage.axaml")]
-    public void DrawSettingsUseOneOverridableSettingsHeading(string relativePath)
+    [Fact]
+    public void DrawSettingsPagesSubscribeBeforeNormalizing()
     {
-        string markup = File.ReadAllText(GetRepositoryPath(relativePath));
-
-        Assert.Contains("Text=\"{x:Static lp:Resources.Section_Overridable}\"", markup, StringComparison.Ordinal);
-        Assert.DoesNotContain("Text=\"{x:Static lp:Resources.Section_Display}\"", markup, StringComparison.Ordinal);
-        Assert.DoesNotContain("Text=\"{x:Static lp:Resources.Section_Animation}\"", markup, StringComparison.Ordinal);
-        Assert.DoesNotContain("Text=\"{x:Static lp:Resources.Section_Color}\"", markup, StringComparison.Ordinal);
-    }
-
-    [Theory]
-    [InlineData("SecRandom/Views/SettingsPages/Picking/RollCallDrawSettingsPage.axaml.cs")]
-    [InlineData("SecRandom/Views/SettingsPages/Picking/QuickDrawSettingsPage.axaml.cs")]
-    public void DrawSettingsPagesSubscribeBeforeNormalizing(string relativePath)
-    {
-        string source = File.ReadAllText(GetRepositoryPath(relativePath));
+        string source = File.ReadAllText(GetRepositoryPath(
+            "SecRandom/Views/SettingsPages/Picking/DrawSettingsPage.axaml.cs"));
         int constructorStart = source.IndexOf("InitializeComponent();", StringComparison.Ordinal);
         int subscribe = source.IndexOf("SubscribeSettings();", constructorStart, StringComparison.Ordinal);
         int normalize = source.IndexOf("NormalizeDrawSettings();", constructorStart, StringComparison.Ordinal);
 
-        Assert.True(subscribe >= 0, $"{relativePath} must subscribe to settings in its constructor.");
-        Assert.True(normalize >= 0, $"{relativePath} must normalize settings in its constructor.");
-        Assert.True(subscribe < normalize, $"{relativePath} must subscribe before normalization so repairs are saved.");
+        Assert.True(subscribe >= 0, "DrawSettingsPage must subscribe to settings in its constructor.");
+        Assert.True(normalize >= 0, "DrawSettingsPage must normalize settings in its constructor.");
+        Assert.True(subscribe < normalize, "DrawSettingsPage must subscribe before normalization so repairs are saved.");
     }
 
-    [Theory]
-    [InlineData("SecRandom/Views/SettingsPages/Picking/RollCallDrawSettingsPage.axaml.cs")]
-    [InlineData("SecRandom/Views/SettingsPages/Picking/QuickDrawSettingsPage.axaml.cs")]
-    public void DrawSettingsPagesDoNotNormalizeInReadOnlyPreview(string relativePath)
+    [Fact]
+    public void DrawSettingsPagesDoNotNormalizeInReadOnlyPreview()
     {
         string settingsViewSource = File.ReadAllText(GetRepositoryPath("SecRandom/Views/SettingsView.axaml.cs"));
-        string source = File.ReadAllText(GetRepositoryPath(relativePath));
+        string source = File.ReadAllText(GetRepositoryPath(
+            "SecRandom/Views/SettingsPages/Picking/DrawSettingsPage.axaml.cs"));
         int normalize = source.IndexOf("private void NormalizeDrawSettings()", StringComparison.Ordinal);
 
         Assert.Contains("public bool IsPreviewMode => _isPreviewMode;", settingsViewSource, StringComparison.Ordinal);
-        Assert.True(normalize >= 0, $"{relativePath} must define NormalizeDrawSettings().");
+        Assert.True(normalize >= 0, "DrawSettingsPage must define NormalizeDrawSettings().");
         Assert.Contains(
             "SettingsView.Current?.IsPreviewMode == true",
             source[normalize..],

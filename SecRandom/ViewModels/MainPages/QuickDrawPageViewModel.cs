@@ -108,35 +108,20 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
                 4 => 1.06,
                 _ => 1
             };
-            return Math.Clamp(DisplaySettings.FontSize * scale, 1, 300);
+            return Math.Clamp(DrawSettings.FontSize * scale, 1, 300);
         }
     }
     public FontFamily ResultFontFamily => BuildResultFontFamily();
-    public bool AnimationEnabled => AnimationSettings.Animation != AnimationMode.NoAnimation;
-    public DrawAnimationStyleMode AnimationStyle => AnimationSettings.AnimationStyle;
+    public bool AnimationEnabled => DrawSettings.Animation != AnimationMode.NoAnimation;
+    public DrawAnimationStyleMode AnimationStyle => DrawSettings.AnimationStyle;
     public int AnimationDuration => 250;
-    public int PreviewAnimationDuration => AnimationSettings.Animation == AnimationMode.AutoPlay
-        ? Math.Clamp(AnimationSettings.AnimationInterval, 1, 10000)
+    public int PreviewAnimationDuration => DrawSettings.Animation == AnimationMode.AutoPlay
+        ? Math.Clamp(DrawSettings.AnimationInterval, 1, 10000)
         : 80;
     public int ResultAutoCloseTime => _notificationAutoCloseTime ?? 0;
 
-    private DrawSettingsConfigBase DisplaySettings =>
-        Config.GetOverrideDrawSettings(DrawSettingsType.QuickDraw, OverridableDrawSettingsType.Display);
-
-    private DrawSettingsConfigBase AnimationSettings =>
-        Config.GetOverrideDrawSettings(DrawSettingsType.QuickDraw, OverridableDrawSettingsType.Animation);
-
-    private DrawSettingsConfigBase ColorSettings =>
-        Config.GetOverrideDrawSettings(DrawSettingsType.QuickDraw, OverridableDrawSettingsType.Color);
-
-    private DrawSettingsConfigBase StudentImageSettings =>
-        Config.GetOverrideDrawSettings(DrawSettingsType.QuickDraw, OverridableDrawSettingsType.StudentImage);
-
-    private DrawSettingsConfigBase MusicSettings =>
-        Config.GetOverrideDrawSettings(DrawSettingsType.QuickDraw, OverridableDrawSettingsType.Music);
-
-    private DrawSettingsConfigBase VoiceAnnouncementSettings =>
-        Config.GetOverrideDrawSettings(DrawSettingsType.QuickDraw, OverridableDrawSettingsType.VoiceAnnouncement);
+    // 点名与闪抽共用默认抽取设置，显示、动画、颜色、音乐等视图参数统一从这里读取。
+    private DrawSettingsConfigBase DrawSettings => Config.DefaultDrawSettings;
 
     partial void OnSelectedStudentListNameChanged(string value)
     {
@@ -238,7 +223,7 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
                 cancellationToken: default);
             var previewTask = skipPreview
                 ? Task.CompletedTask
-                : ShowPreviewAsync(candidates, count, MusicSettings.AnimationMusic);
+                : ShowPreviewAsync(candidates, count, DrawSettings.AnimationMusic);
             List<Student> drawn;
             VerificationDrawOutcome<Student> drawOutcome;
             try
@@ -248,10 +233,10 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
                 drawn = drawOutcome.Winners.ToList();
                 if (drawCompletedFirst && !previewTask.IsCompleted)
                     await _drawAudioService.StartAnimationMusicAsync(
-                        DrawMusicAttachedSettingsResolver.GetAnimationMusic(drawn.FirstOrDefault(), MusicSettings.AnimationMusic),
-                        MusicSettings.AnimationMusicVolume,
-                        MusicSettings.AnimationMusicFadeIn,
-                        MusicSettings.AnimationMusicLoop).ConfigureAwait(true);
+                        DrawMusicAttachedSettingsResolver.GetAnimationMusic(drawn.FirstOrDefault(), DrawSettings.AnimationMusic),
+                        DrawSettings.AnimationMusicVolume,
+                        DrawSettings.AnimationMusicFadeIn,
+                        DrawSettings.AnimationMusicLoop).ConfigureAwait(true);
 
                 await previewTask.ConfigureAwait(true);
             }
@@ -274,7 +259,7 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
                 DateTime.Now,
                 count,
                 SelectedStudentListName,
-                DrawMethod: (int)Config.QuickDrawSettings.DrawType,
+                DrawMethod: (int)Config.DefaultDrawSettings.DrawType,
                 Weights: weights,
                 CourseName: courseName));
             LastDrawnStudent = drawn[0];
@@ -290,10 +275,10 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
                     SelectedStudentListName,
                     drawn);
             await _drawAudioService.TransitionToResultMusicAsync(
-                DrawMusicAttachedSettingsResolver.GetResultMusic(drawn.FirstOrDefault(), MusicSettings.ResultMusic),
-                MusicSettings.ResultMusicVolume, MusicSettings.ResultMusicFadeIn, MusicSettings.ResultMusicFadeOut,
-                MusicSettings.AnimationMusicFadeOut).ConfigureAwait(false);
-            if (_voiceAnnouncementService is not null && VoiceAnnouncementSettings.VoiceAnnouncementEnabled)
+                DrawMusicAttachedSettingsResolver.GetResultMusic(drawn.FirstOrDefault(), DrawSettings.ResultMusic),
+                DrawSettings.ResultMusicVolume, DrawSettings.ResultMusicFadeIn, DrawSettings.ResultMusicFadeOut,
+                DrawSettings.AnimationMusicFadeOut).ConfigureAwait(false);
+            if (_voiceAnnouncementService is not null && DrawSettings.VoiceAnnouncementEnabled)
                 await _voiceAnnouncementService.SpeakStudentsAsync(drawn).ConfigureAwait(false);
 
             StartCooldown();
@@ -362,7 +347,7 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
                      .OrderBy(Path.GetFileName))
             StudentListNames.Add(Path.GetFileNameWithoutExtension(file));
 
-        var defaultClass = Config.QuickDrawSettings.DefaultClass;
+        var defaultClass = Config.DefaultDrawSettings.DefaultClass;
         SelectedStudentListName = StudentListNames.Contains(defaultClass)
             ? defaultClass
             : string.Empty;
@@ -371,7 +356,7 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
     private bool TryLoadDefaultStudentList()
     {
         RefreshStudentLists();
-        var defaultClass = Config.QuickDrawSettings.DefaultClass.Trim();
+        var defaultClass = Config.DefaultDrawSettings.DefaultClass.Trim();
         if (!StudentListNames.Contains(defaultClass))
         {
             defaultClass = StudentListNames.FirstOrDefault() ?? string.Empty;
@@ -381,7 +366,7 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
                 return false;
             }
 
-            Config.QuickDrawSettings.DefaultClass = defaultClass;
+            Config.DefaultDrawSettings.DefaultClass = defaultClass;
             _configHandler.Save();
         }
 
@@ -401,13 +386,13 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
 
     private void EnsureRestartTemporaryRecordsCleared(string listName)
     {
-        if (Config.RollCallSettings.ClearRecord == ClearRecordMode.Restarted)
+        if (Config.DefaultDrawSettings.ClearRecord == ClearRecordMode.Restarted)
             _temporaryRecordService.ClearStudentListOnce(listName);
     }
 
     private IEnumerable<Student> GetEligibleCandidates()
     {
-        var threshold = DrawRepeatPolicy.ResolveThreshold(Config.QuickDrawSettings.DrawMode, Config.QuickDrawSettings.HalfRepeat);
+        var threshold = DrawRepeatPolicy.ResolveThreshold(Config.DefaultDrawSettings.DrawMode, Config.DefaultDrawSettings.HalfRepeat);
         var counts = _temporaryRecordService.GetStudentCounts(SelectedStudentListName, string.Empty, string.Empty);
         return DrawCandidateFilter.FilterEligibleStudents(
             _profileService.CurrentStudentList?.Students ?? [],
@@ -429,7 +414,7 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
         if (students.Count == 0)
             return false;
 
-        var threshold = DrawRepeatPolicy.ResolveThreshold(Config.QuickDrawSettings.DrawMode, Config.QuickDrawSettings.HalfRepeat);
+        var threshold = DrawRepeatPolicy.ResolveThreshold(Config.DefaultDrawSettings.DrawMode, Config.DefaultDrawSettings.HalfRepeat);
         var counts = _temporaryRecordService.GetStudentCounts(SelectedStudentListName, string.Empty, string.Empty);
         if (DrawCandidateFilter.FilterEligibleStudents(students, string.Empty, string.Empty, counts, threshold).Any())
             return false;
@@ -440,22 +425,22 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
 
     private async Task ShowPreviewAsync(IReadOnlyList<Student> candidates, int count, string animationMusic)
     {
-        if (AnimationSettings.Animation == AnimationMode.NoAnimation)
+        if (DrawSettings.Animation == AnimationMode.NoAnimation)
             return;
 
         await _drawAudioService.StartAnimationMusicAsync(
             animationMusic,
-            MusicSettings.AnimationMusicVolume,
-            MusicSettings.AnimationMusicFadeIn, MusicSettings.AnimationMusicLoop).ConfigureAwait(true);
+            DrawSettings.AnimationMusicVolume,
+            DrawSettings.AnimationMusicFadeIn, DrawSettings.AnimationMusicLoop).ConfigureAwait(true);
 
         var previewCts = new CancellationTokenSource();
         _previewCts = previewCts;
         var token = previewCts.Token;
 
-        var manualStop = AnimationSettings.Animation == AnimationMode.ManualStop;
+        var manualStop = DrawSettings.Animation == AnimationMode.ManualStop;
         var iterations = manualStop
             ? int.MaxValue
-            : Math.Clamp(AnimationSettings.AutoplayCount, 1, 999);
+            : Math.Clamp(DrawSettings.AutoplayCount, 1, 999);
         var delay = PreviewAnimationDuration;
 
         IsDrawing = true;
@@ -597,16 +582,16 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
         return new QuickDrawResultItem(
             FormatStudent(student),
             student.Tags,
-            DisplaySettings.ShowTags && !string.IsNullOrWhiteSpace(student.Tags),
-            DisplaySettings.DisplayStyle == DisplayStyleMode.Card,
+            DrawSettings.ShowTags && !string.IsNullOrWhiteSpace(student.Tags),
+            DrawSettings.DisplayStyle == DisplayStyleMode.Card,
             accentBrush,
             DrawColorHelper.ResolveTextBrush(accentBrush, Config.Appearance.Theme),
-            DisplaySettings.ShowWeightTransparency,
+            DrawSettings.ShowWeightTransparency,
             $"权重 {weight:0.##}",
             BuildResultOpacity(weight),
             BuildImage(student),
-            StudentImageSettings.StudentImage,
-            StudentImageSettings.StudentImagePosition,
+            DrawSettings.StudentImage,
+            DrawSettings.StudentImagePosition,
             AvatarInitialResolver.Resolve(student.Name, student.Id));
     }
 
@@ -617,7 +602,7 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
             item,
             string.Empty,
             false,
-            DisplaySettings.DisplayStyle == DisplayStyleMode.Card,
+            DrawSettings.DisplayStyle == DisplayStyleMode.Card,
             accentBrush,
             DrawColorHelper.ResolveTextBrush(accentBrush, Config.Appearance.Theme),
             false,
@@ -633,7 +618,7 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
     {
         var id = student.Id.Trim();
         var name = student.Name.Trim();
-        return DisplaySettings.DisplayFormat switch
+        return DrawSettings.DisplayFormat switch
         {
             DisplayFormatMode.Id => string.IsNullOrWhiteSpace(id) ? name : id,
             DisplayFormatMode.Name => string.IsNullOrWhiteSpace(name) ? id : name,
@@ -643,7 +628,7 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
 
     private double BuildDisplayWeight(Student student)
     {
-        if (!string.Equals(Config.QuickDrawSettings.AlgorithmId, "builtin.fair", StringComparison.OrdinalIgnoreCase))
+        if (!string.Equals(Config.DefaultDrawSettings.AlgorithmId, "builtin.fair", StringComparison.OrdinalIgnoreCase))
             return 1;
 
         return _drawEngine.CalculateStudentWeight((_profileService.CurrentStudentList?.Students ?? []).Where(s => s.IsCandidate).ToList(), courseName: _linkageDrawCoordinator.GetCourseName())
@@ -652,7 +637,7 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
 
     private double BuildResultOpacity(double weight)
     {
-        return DisplaySettings.ShowWeightTransparency
+        return DrawSettings.ShowWeightTransparency
             ? Math.Clamp(0.42 + Math.Min(weight, 3) / 3 * 0.58, 0.42, 1)
             : 1;
     }
@@ -660,15 +645,15 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
     private IBrush? ResolveAccentBrush()
     {
         return DrawColorHelper.ResolveAccentBrush(
-            ColorSettings.AnimationColorTheme,
-            ColorSettings.AnimationFixedColor,
+            DrawSettings.AnimationColorTheme,
+            DrawSettings.AnimationFixedColor,
             Config.Appearance.Theme);
     }
 
     private FontFamily BuildResultFontFamily()
     {
-        var font = DisplaySettings.UseGlobalFont == UseGlobalFontMode.Custom
-            ? DisplaySettings.CustomFont
+        var font = DrawSettings.UseGlobalFont == UseGlobalFontMode.Custom
+            ? DrawSettings.CustomFont
             : Config.Appearance.Font;
         return new FontFamily(string.Equals(font, "MiSans", StringComparison.OrdinalIgnoreCase)
             ? "avares://SecRandom/Assets/Fonts/MiSans/#MiSans"
@@ -689,7 +674,7 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
     {
         _isCoolingDown = true;
         OnPropertyChanged(nameof(CanStartDraw));
-        await Task.Delay(Math.Clamp(Config.QuickDrawSettings.DisableAfterClick, 0, 60) * 1000).ConfigureAwait(true);
+        await Task.Delay(Math.Clamp(Config.DefaultDrawSettings.DisableAfterClick, 0, 60) * 1000).ConfigureAwait(true);
         _isCoolingDown = false;
         OnPropertyChanged(nameof(CanStartDraw));
     }

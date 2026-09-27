@@ -17,7 +17,7 @@ internal sealed class RollCallSession(
     public IReadOnlyList<Student> GetEligibleStudents()
     {
         var students = profileService.CurrentStudentList?.Students ?? [];
-        var settings = configHandler.Data.RollCallSettings;
+        var settings = configHandler.Data.DefaultDrawSettings;
         var threshold = DrawRepeatPolicy.ResolveThreshold(settings.DrawMode, settings.HalfRepeat);
         var counts = temporaryRecordService.GetStudentCounts(GetListName(), string.Empty, string.Empty);
         return DrawCandidateFilter.FilterEligibleStudents(students, string.Empty, string.Empty, counts, threshold);
@@ -29,7 +29,7 @@ internal sealed class RollCallSession(
         if (candidates.Count == 0)
             return new DrawResult<Student> { Status = DrawStatus.NoEligibleCandidates };
 
-        var drawType = configHandler.Data.RollCallSettings.DrawType;
+        var drawType = configHandler.Data.DefaultDrawSettings.DrawType;
         var prepared = drawType == DrawType.Fair
             ? drawEngine.PrepareStudentsForMobileDesktopDefaults(1, candidates, DrawSettingsType.RollCall, DrawType.Fair)
             : null;

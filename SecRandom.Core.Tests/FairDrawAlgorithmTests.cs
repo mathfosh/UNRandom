@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -192,10 +192,10 @@ public sealed class FairDrawAlgorithmTests
         var first = new Student { Name = "First", RecordId = Guid.NewGuid() };
         var second = new Student { Name = "Second", RecordId = Guid.NewGuid() };
         var config = CreateConfig(new FairDrawSettingsConfig());
-        config.RollCallSettings.DrawType = DrawType.Random;
-        config.RollCallSettings.AlgorithmId = "builtin.random";
-        config.RollCallSettings.DrawMode = DrawMode.HalfRepeat;
-        config.RollCallSettings.HalfRepeat = 2;
+        config.DefaultDrawSettings.DrawType = DrawType.Random;
+        config.DefaultDrawSettings.AlgorithmId = "builtin.random";
+        config.DefaultDrawSettings.DrawMode = DrawMode.HalfRepeat;
+        config.DefaultDrawSettings.HalfRepeat = 2;
 
         using var host = CreateHost(config, new TestProfileService(new StudentHistory(), new StudentList { Students = [first, second] }));
 
@@ -223,8 +223,8 @@ public sealed class FairDrawAlgorithmTests
             FairDrawGender = false,
             FairDrawTime = false
         });
-        config.RollCallSettings.DrawType = DrawType.Random;
-        config.RollCallSettings.AlgorithmId = "builtin.random";
+        config.DefaultDrawSettings.DrawType = DrawType.Random;
+        config.DefaultDrawSettings.AlgorithmId = "builtin.random";
 
         using var host = CreateHost(config, new TestProfileService(new StudentHistory(), new StudentList { Students = [first, second] }));
         var engine = CreateEngine(host, new WeightedScriptedRandomSource(0.75));
@@ -245,9 +245,9 @@ public sealed class FairDrawAlgorithmTests
             Probability = 50
         };
         var config = CreateConfig(new FairDrawSettingsConfig());
-        config.RollCallSettings.DrawType = DrawType.Random;
-        config.RollCallSettings.AlgorithmId = "builtin.random";
-        config.RollCallSettings.DrawMode = DrawMode.NoRepeat;
+        config.DefaultDrawSettings.DrawType = DrawType.Random;
+        config.DefaultDrawSettings.AlgorithmId = "builtin.random";
+        config.DefaultDrawSettings.DrawMode = DrawMode.NoRepeat;
 
         using var host = CreateHost(config, new TestProfileService(new StudentHistory(), new StudentList { Students = [student] }));
 
@@ -267,9 +267,9 @@ public sealed class FairDrawAlgorithmTests
             Probability = 50
         };
         var config = CreateConfig(new FairDrawSettingsConfig());
-        config.RollCallSettings.DrawType = DrawType.Random;
-        config.RollCallSettings.AlgorithmId = "builtin.random";
-        config.RollCallSettings.DrawMode = DrawMode.NoRepeat;
+        config.DefaultDrawSettings.DrawType = DrawType.Random;
+        config.DefaultDrawSettings.AlgorithmId = "builtin.random";
+        config.DefaultDrawSettings.DrawMode = DrawMode.NoRepeat;
 
         using var host = CreateHost(config, new TestProfileService(new StudentHistory(), new StudentList { Students = [student] }));
 
@@ -371,7 +371,6 @@ public sealed class FairDrawAlgorithmTests
         return new MainConfigModel
         {
             FairDrawSettings = fairSettings,
-            RollCallSettings = new RollCallSettingsConfig(),
             LotterySettings = new LotterySettingsConfig(),
             DefaultDrawSettings = new DefaultDrawSettingsConfig()
         };

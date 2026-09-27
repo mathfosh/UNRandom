@@ -585,7 +585,7 @@ public partial class VoiceSettingsPage : UserControl, INotifyPropertyChanged
                 : null)
             ?? BatchRosterOptions.FirstOrDefault(option =>
                 option.Source == BatchSourceStudents &&
-                option.RosterName == ViewModel.Config.RollCallSettings.DefaultClass)
+                option.RosterName == ViewModel.Config.DefaultDrawSettings.DefaultClass)
             ?? BatchRosterOptions.FirstOrDefault(option =>
                 option.Source == BatchSourcePrizes &&
                 option.RosterName == ViewModel.Config.LotterySettings.DefaultPool)
@@ -629,7 +629,7 @@ public partial class VoiceSettingsPage : UserControl, INotifyPropertyChanged
                 : null)
             ?? ClearRosterOptions.FirstOrDefault(option =>
                 option.Source == BatchSourceStudents &&
-                option.RosterName == ViewModel.Config.RollCallSettings.DefaultClass)
+                option.RosterName == ViewModel.Config.DefaultDrawSettings.DefaultClass)
             ?? ClearRosterOptions.FirstOrDefault(option =>
                 option.Source == BatchSourcePrizes &&
                 option.RosterName == ViewModel.Config.LotterySettings.DefaultPool)

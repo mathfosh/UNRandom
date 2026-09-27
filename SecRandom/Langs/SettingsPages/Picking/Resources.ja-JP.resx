@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -12,15 +12,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Page_Default" xml:space="preserve">
-    <value>既定の抽選設定</value>
-  </data>
-  <data name="Page_RollCall" xml:space="preserve">
-    <value>点呼抽選設定</value>
-  </data>
-  <data name="Page_QuickDraw" xml:space="preserve">
-    <value>クイック抽選設定</value>
-  </data>
   <data name="Page_Lottery" xml:space="preserve">
     <value>くじ引き抽選設定</value>
   </data>
@@ -41,9 +32,6 @@
   </data>
   <data name="Section_Reminder" xml:space="preserve">
     <value>リマインダー設定</value>
-  </data>
-  <data name="C_EnableOverride" xml:space="preserve">
-    <value>上書きを有効化</value>
   </data>
   <data name="S_DrawMode" xml:space="preserve">
     <value>抽選モード</value>
@@ -332,9 +320,6 @@
   </data>
   <data name="O_PrizeHyphenGroup" xml:space="preserve">
     <value>景品-分組</value>
-  </data>
-  <data name="Section_Overridable" xml:space="preserve">
-    <value>上書き可能な設定</value>
   </data>
   <data name="Section_Music" xml:space="preserve">
     <value>音楽設定</value>

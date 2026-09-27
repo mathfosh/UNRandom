@@ -164,8 +164,6 @@ public sealed class MobileMediaLibraryService(
     private void ClearTrackReferences(string trackId)
     {
         var configChanged = ClearTrackReferences(configHandler.Data.DefaultDrawSettings, trackId)
-                            | ClearTrackReferences(configHandler.Data.RollCallSettings, trackId)
-                            | ClearTrackReferences(configHandler.Data.QuickDrawSettings, trackId)
                             | ClearTrackReferences(configHandler.Data.LotterySettings, trackId);
         if (configChanged)
             configHandler.Save();

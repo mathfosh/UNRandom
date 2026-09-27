@@ -14,9 +14,6 @@ using DefaultDrawSettingsConfig = SecRandom.Core.Models.SubConfigs.Picking.Defau
 using DrawSettingsConfigBase = SecRandom.Core.Models.SubConfigs.Picking.DrawSettingsConfigBase;
 using FairDrawSettingsConfig = SecRandom.Core.Models.SubConfigs.Picking.FairDrawSettingsConfig;
 using LotterySettingsConfig = SecRandom.Core.Models.SubConfigs.Picking.LotterySettingsConfig;
-using OverridableDrawSettings = SecRandom.Core.Models.SubConfigs.Picking.OverridableDrawSettings;
-using QuickDrawSettingsConfig = SecRandom.Core.Models.SubConfigs.Picking.QuickDrawSettingsConfig;
-using RollCallSettingsConfig = SecRandom.Core.Models.SubConfigs.Picking.RollCallSettingsConfig;
 
 namespace SecRandom.Core.Models;
 
@@ -33,8 +30,6 @@ public partial class MainConfigModel : ConfigBase, IJsonOnDeserialized
     // 抽取设置
     [ObservableProperty] private FairDrawSettingsConfig _fairDrawSettings = new();
     [ObservableProperty] private DefaultDrawSettingsConfig _defaultDrawSettings = new();
-    [ObservableProperty] private RollCallSettingsConfig _rollCallSettings = new();
-    [ObservableProperty] private QuickDrawSettingsConfig _quickDrawSettings = new();
     [ObservableProperty] private LotterySettingsConfig _lotterySettings = new();
 
     [ObservableProperty] private FloatingWindowSettingsConfig _floatingWindowSettings = new();
@@ -87,33 +82,25 @@ public partial class MainConfigModel : ConfigBase, IJsonOnDeserialized
         set => General.ApplyLegacyBackup(value);
     }
 
-    public DrawSettingsConfigBase GetOverrideDrawSettings(
-        DrawSettingsType drawSettingsType, OverridableDrawSettingsType settingsType)
-    {
-        OverridableDrawSettings settings = drawSettingsType switch
-        {
-            DrawSettingsType.RollCall => RollCallSettings,
-            DrawSettingsType.QuickDraw => QuickDrawSettings,
-            DrawSettingsType.Lottery => LotterySettings,
-            _ => throw new ArgumentOutOfRangeException(nameof(drawSettingsType), drawSettingsType, null)
-        };
+    private DefaultDrawSettingsConfig? _legacyRollCallSettings;
+    private DefaultDrawSettingsConfig? _legacyQuickDrawSettings;
 
-        return settingsType switch
-        {
-            OverridableDrawSettingsType.Display => settings.OverrideDisplaySettings ? settings : DefaultDrawSettings,
-            OverridableDrawSettingsType.Animation =>
-                settings.OverrideAnimationSettings ? settings : DefaultDrawSettings,
-            OverridableDrawSettingsType.Color => settings.OverrideColorSettings ? settings : DefaultDrawSettings,
-            OverridableDrawSettingsType.StudentImage => settings.OverrideStudentImageSettings
-                ? settings
-                : DefaultDrawSettings,
-            OverridableDrawSettingsType.Reminder => settings.OverrideReminderSettings ? settings : DefaultDrawSettings,
-            OverridableDrawSettingsType.Music => settings.OverrideMusicSettings ? settings : DefaultDrawSettings,
-            OverridableDrawSettingsType.VoiceAnnouncement => settings.OverrideVoiceAnnouncementSettings
-                ? settings
-                : DefaultDrawSettings,
-            _ => throw new ArgumentOutOfRangeException(nameof(settingsType), settingsType, null)
-        };
+    /// <summary>
+    ///     旧版本的点名抽取设置，仅用于读取老配置并并入默认抽取设置。
+    /// </summary>
+    [JsonPropertyName("roll_call_settings")]
+    public DefaultDrawSettingsConfig? LegacyRollCallSettingsOnLoad
+    {
+        set => _legacyRollCallSettings = value;
+    }
+
+    /// <summary>
+    ///     旧版本的闪抽抽取设置，仅用于读取老配置并并入默认抽取设置。
+    /// </summary>
+    [JsonPropertyName("quick_draw_settings")]
+    public DefaultDrawSettingsConfig? LegacyQuickDrawSettingsOnLoad
+    {
+        set => _legacyQuickDrawSettings = value;
     }
 
     public string GetLotteryProcessDisplayTemplate()
@@ -158,6 +145,7 @@ public partial class MainConfigModel : ConfigBase, IJsonOnDeserialized
     void IJsonOnDeserialized.OnDeserialized()
     {
         ApplyLegacyAnimationMusicLoop();
+        ApplyLegacyDrawSettings();
     }
 
     private void ApplyLegacyAnimationMusicLoop()
@@ -167,8 +155,6 @@ public partial class MainConfigModel : ConfigBase, IJsonOnDeserialized
             return;
 
         ApplyLegacyAnimationMusicLoop(DefaultDrawSettings, animationMusicLoop);
-        ApplyLegacyAnimationMusicLoop(RollCallSettings, animationMusicLoop);
-        ApplyLegacyAnimationMusicLoop(QuickDrawSettings, animationMusicLoop);
         ApplyLegacyAnimationMusicLoop(LotterySettings, animationMusicLoop);
     }
 
@@ -176,5 +162,29 @@ public partial class MainConfigModel : ConfigBase, IJsonOnDeserialized
     {
         if (!settings.HasAnimationMusicLoop)
             settings.AnimationMusicLoop = value;
+    }
+
+    /// <summary>
+    ///     点名与闪抽过去各存一份抽取设置，现在统一读默认抽取设置。
+    ///     并入时先取闪抽独有的「点击后禁用」，再以旧点名设置覆盖其余抽取参数。
+    ///     下一次保存配置会写掉这两个旧节点，迁移只生效一次。
+    /// </summary>
+    private void ApplyLegacyDrawSettings()
+    {
+        if (_legacyRollCallSettings is null && _legacyQuickDrawSettings is null)
+            return;
+
+        if (_legacyQuickDrawSettings is { } quickDraw)
+            DefaultDrawSettings.DisableAfterClick = quickDraw.DisableAfterClick;
+
+        if (_legacyRollCallSettings is not { } rollCall)
+            return;
+
+        DefaultDrawSettings.DrawMode = rollCall.DrawMode;
+        DefaultDrawSettings.HalfRepeat = rollCall.HalfRepeat;
+        DefaultDrawSettings.ClearRecord = rollCall.ClearRecord;
+        DefaultDrawSettings.DrawType = rollCall.DrawType;
+        DefaultDrawSettings.AlgorithmId = rollCall.AlgorithmId;
+        DefaultDrawSettings.DefaultClass = rollCall.DefaultClass;
     }
 }

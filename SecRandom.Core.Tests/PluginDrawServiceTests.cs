@@ -50,8 +50,8 @@ public sealed class PluginDrawServiceTests : IDisposable
     {
         using var provider = CreateProvider(allowAuthorization: true);
         var config = provider.GetRequiredService<MainConfigHandler>();
-        config.Data.RollCallSettings.DrawMode = DrawMode.Repeat;
-        config.Data.RollCallSettings.DrawType = DrawType.Random;
+        config.Data.DefaultDrawSettings.DrawMode = DrawMode.Repeat;
+        config.Data.DefaultDrawSettings.DrawType = DrawType.Random;
         config.Save();
 
         var profile = provider.GetRequiredService<IProfileService>();

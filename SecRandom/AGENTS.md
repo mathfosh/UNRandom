@@ -152,7 +152,7 @@ SecRandom/
 - Views usually set `DataContext = this` and expose a `ViewModel` property.
 - Main default page: `main.rollCall`; settings default page: `settings.overview`, which separates aggregate roll-call list statistics from aggregate lottery-pool statistics.
 - The roll-call main page is bottom-pinned in the main window sidebar (`PageLocation.Bottom`), full-width, and title-hidden. Keep its page chrome controlled by `MoreSettings`.
-- Lottery main page ID is `main.lottery`; quick draw is not registered as a main navigation page, but its settings page remains `settings.picking.quickDraw`.
+- Lottery main page ID is `main.lottery`; quick draw is not registered as a main navigation page. Roll-call, quick-draw, and default draw settings share the single `settings.picking.draw` page and one `DefaultDrawSettingsConfig`.
 - More settings includes roll-call and lottery page management options for the control panel side and per-control visibility; wire built-in draw pages through `MainConfigModel.MoreSettings` instead of duplicating local UI flags.
 - Global shortcuts are an app-layer hosted service. `GlobalShortcutService` registers the nine V2-parity actions through Windows `RegisterHotKey`, dispatches them to Avalonia's UI thread, and degrades without registrations on other platforms. Changes to `MoreSettings.EnableShortcut` or a binding apply without restarting.
 - Floating window settings are live-applied to an open `FloatingWindow`: button selection, layout, display style, size, opacity, topmost mode, and dragging must not require reopening the window.

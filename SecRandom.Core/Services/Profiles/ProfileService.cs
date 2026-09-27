@@ -26,7 +26,7 @@ public static partial class CoreRuntimeServiceCollectionExtensions
         _configHandler = configHandler;
         _configService = configService;
 
-        var studentListName = ResolveProfileName("list", "roll_call_list", _configHandler.Data.RollCallSettings.DefaultClass);
+        var studentListName = ResolveProfileName("list", "roll_call_list", _configHandler.Data.DefaultDrawSettings.DefaultClass);
         var prizeListName = ResolveProfileName("list", "lottery_list", _configHandler.Data.LotterySettings.DefaultPool);
 
         StudentListConfig = CreateStudentListConfig(studentListName);

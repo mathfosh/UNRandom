@@ -31,10 +31,7 @@
 
 
 - 抽取设置 Picking `alpha1`
-    - 默认抽取设置 Default
-    - 点名抽取设置 RollCall
-    - 闪抽抽取设置 QuickDraw
-    - 抽奖抽取设置 Lottery
+    - 抽取设置 Draw（默认/点名/闪抽共用一页一份配置）
 
 
 - 提醒设置 Notification `alpha2`

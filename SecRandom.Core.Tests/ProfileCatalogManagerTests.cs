@@ -113,7 +113,7 @@ public sealed class ProfileCatalogManagerTests : IDisposable
 
         Assert.True(manager.SaveStudentList(snapshot));
         manager.SetDefaultStudentList("class-b");
-        Assert.Equal("class-b", config.Data.RollCallSettings.DefaultClass);
+        Assert.Equal("class-b", config.Data.DefaultDrawSettings.DefaultClass);
 
         var reloaded = manager.LoadStudentList("class-b")!;
         Assert.Single(reloaded.Students);

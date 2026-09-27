@@ -89,8 +89,6 @@ public sealed class MusicLibraryServiceTests : IDisposable
 
         Assert.NotNull(settings);
         Assert.False(settings.DefaultDrawSettings.AnimationMusicLoop);
-        Assert.False(settings.RollCallSettings.AnimationMusicLoop);
-        Assert.False(settings.QuickDrawSettings.AnimationMusicLoop);
         Assert.False(settings.LotterySettings.AnimationMusicLoop);
         var serialized = JsonSerializer.Serialize(settings, ConfigServiceBase.JsonOptions);
         Assert.DoesNotContain("backgroundMusicLoop", serialized);
@@ -104,8 +102,6 @@ public sealed class MusicLibraryServiceTests : IDisposable
             {
               "more_settings": { "background_music_loop": false },
               "default_draw_settings": { "animation_music_loop": true },
-              "roll_call_settings": {},
-              "quick_draw_settings": { "animation_music_loop": true },
               "lottery_settings": { "animation_music_loop": false }
             }
             """;
@@ -114,8 +110,6 @@ public sealed class MusicLibraryServiceTests : IDisposable
 
         Assert.NotNull(settings);
         Assert.True(settings.DefaultDrawSettings.AnimationMusicLoop);
-        Assert.False(settings.RollCallSettings.AnimationMusicLoop);
-        Assert.True(settings.QuickDrawSettings.AnimationMusicLoop);
         Assert.False(settings.LotterySettings.AnimationMusicLoop);
     }
 
@@ -129,14 +123,12 @@ public sealed class MusicLibraryServiceTests : IDisposable
         service.Refresh();
 
         config.DefaultDrawSettings.AnimationMusic = "track.wav";
-        config.RollCallSettings.ResultMusic = "track.wav";
-        config.QuickDrawSettings.AnimationMusic = "track.wav";
+        config.DefaultDrawSettings.ResultMusic = "track.wav";
         config.LotterySettings.ResultMusic = "track.wav";
 
         Assert.True(service.Delete(Assert.Single(service.Tracks)));
         Assert.Equal(MusicLibraryService.NoMusicTrackId, config.DefaultDrawSettings.AnimationMusic);
-        Assert.Equal(MusicLibraryService.NoMusicTrackId, config.RollCallSettings.ResultMusic);
-        Assert.Equal(MusicLibraryService.NoMusicTrackId, config.QuickDrawSettings.AnimationMusic);
+        Assert.Equal(MusicLibraryService.NoMusicTrackId, config.DefaultDrawSettings.ResultMusic);
         Assert.Equal(MusicLibraryService.NoMusicTrackId, config.LotterySettings.ResultMusic);
     }
 

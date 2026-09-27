@@ -243,7 +243,7 @@ public sealed partial class RollCallHistoryViewModel : ViewModelBase
     private Dictionary<Student, double> BuildPredictedWeightMap()
     {
         var visibleStudents = GetVisibleStudents().ToList();
-        if (Config.RollCallSettings.DrawType != DrawType.Fair)
+        if (Config.DefaultDrawSettings.DrawType != DrawType.Fair)
             return [];
 
         return _drawEngine.CalculateStudentWeight(visibleStudents, courseName: GetSelectedSubjectFilter())

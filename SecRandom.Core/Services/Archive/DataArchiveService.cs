@@ -560,7 +560,7 @@ public sealed class DataArchiveService(
 
     private void ReloadConfiguredProfiles()
     {
-        profileService.LoadStudentProfile(configHandler.Data.RollCallSettings.DefaultClass, saveCurrent: false);
+        profileService.LoadStudentProfile(configHandler.Data.DefaultDrawSettings.DefaultClass, saveCurrent: false);
         profileService.LoadPrizeProfile(configHandler.Data.LotterySettings.DefaultPool, saveCurrent: false);
     }
 

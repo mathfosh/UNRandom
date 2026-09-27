@@ -28,27 +28,21 @@ public class VoiceSettingsConfigTests
         Assert.False(voice.AnnounceId);
         Assert.True(voice.AnnounceName);
         Assert.True(config.DefaultDrawSettings.VoiceAnnouncementEnabled);
-        Assert.True(config.RollCallSettings.VoiceAnnouncementEnabled);
-        Assert.True(config.QuickDrawSettings.VoiceAnnouncementEnabled);
         Assert.True(config.LotterySettings.VoiceAnnouncementEnabled);
     }
 
     [Fact]
-    public void PerDrawVoiceAnnouncementCanOverrideTheDefaultSetting()
+    public void UnifiedDrawSettingsShareVoiceAnnouncementToggle()
     {
+        // 点名与闪抽已并入默认抽取设置，改一处即全部生效。
         var config = new MainConfigModel();
         config.DefaultDrawSettings.VoiceAnnouncementEnabled = false;
-        config.RollCallSettings.VoiceAnnouncementEnabled = true;
 
-        Assert.False(config.GetOverrideDrawSettings(
-            DrawSettingsType.RollCall,
-            OverridableDrawSettingsType.VoiceAnnouncement).VoiceAnnouncementEnabled);
+        Assert.False(config.DefaultDrawSettings.VoiceAnnouncementEnabled);
+        Assert.True(config.LotterySettings.VoiceAnnouncementEnabled);
 
-        config.RollCallSettings.OverrideVoiceAnnouncementSettings = true;
-
-        Assert.True(config.GetOverrideDrawSettings(
-            DrawSettingsType.RollCall,
-            OverridableDrawSettingsType.VoiceAnnouncement).VoiceAnnouncementEnabled);
+        config.DefaultDrawSettings.VoiceAnnouncementEnabled = true;
+        Assert.True(config.DefaultDrawSettings.VoiceAnnouncementEnabled);
     }
 
     [Theory]

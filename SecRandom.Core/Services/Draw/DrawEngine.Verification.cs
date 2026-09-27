@@ -39,14 +39,9 @@ public partial class DrawEngine
             throw new InvalidOperationException("The prepared student pool cannot satisfy this draw.");
 
         var drawType = GetStudentDrawType(drawSettingsType);
-        var drawMode = GetStudentDrawMode(drawSettingsType);
+        var drawMode = GetStudentDrawMode();
         var executionPolicy = StudentDrawExecutionPolicy.DesktopConfigured(drawType, ConfigData.FairDrawSettings,
-            drawSettingsType switch
-            {
-                DrawSettingsType.RollCall => ConfigData.RollCallSettings.AlgorithmId,
-                DrawSettingsType.QuickDraw => ConfigData.QuickDrawSettings.AlgorithmId,
-                _ => null
-            });
+            GetStudentAlgorithmId(drawSettingsType));
         DrawPreparedStudentsSnapshot prepared;
         try
         {
@@ -77,7 +72,7 @@ public partial class DrawEngine
                 fairDraw = drawType == DrawType.Fair,
                 algorithmProfile = algorithmProfile.ToString(),
                 repeatMode = ToAuditName(drawMode),
-                halfRepeatLimit = drawMode == DrawMode.HalfRepeat ? GetStudentRepeatThreshold(drawSettingsType) : (int?)null,
+                halfRepeatLimit = drawMode == DrawMode.HalfRepeat ? GetStudentRepeatThreshold() : (int?)null,
                 averageGapProtectionApplied = executionPolicy.DrawType == DrawType.Fair,
                 candidateCountBeforeAverageGapProtection = preparedCandidates.Count,
                 candidateCountAfterAverageGapProtection = prepared.UsableCandidates.Count,
@@ -194,12 +189,7 @@ public partial class DrawEngine
         };
     }
 
-    private DrawMode GetStudentDrawMode(DrawSettingsType drawSettingsType) => drawSettingsType switch
-    {
-        DrawSettingsType.RollCall => ConfigData.RollCallSettings.DrawMode,
-        DrawSettingsType.QuickDraw => ConfigData.QuickDrawSettings.DrawMode,
-        _ => ConfigData.RollCallSettings.DrawMode
-    };
+    private DrawMode GetStudentDrawMode() => ConfigData.DefaultDrawSettings.DrawMode;
 
     private static string ToAuditName(DrawMode drawMode) => drawMode switch
     {

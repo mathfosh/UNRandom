@@ -76,10 +76,10 @@ public sealed class CoreRuntimeServicesTests : IDisposable
     {
         using var provider = CreateProvider();
         var configHandler = provider.GetRequiredService<MainConfigHandler>();
-        configHandler.Data.RollCallSettings.DefaultClass = "mobile-class";
+        configHandler.Data.DefaultDrawSettings.DefaultClass = "mobile-class";
         configHandler.Data.LotterySettings.DefaultPool = "mobile-pool";
-        configHandler.Data.RollCallSettings.DrawMode = DrawMode.Repeat;
-        configHandler.Data.RollCallSettings.DrawType = DrawType.Random;
+        configHandler.Data.DefaultDrawSettings.DrawMode = DrawMode.Repeat;
+        configHandler.Data.DefaultDrawSettings.DrawType = DrawType.Random;
         configHandler.Save();
 
         var profile = provider.GetRequiredService<IProfileService>();
@@ -128,9 +128,9 @@ public sealed class CoreRuntimeServicesTests : IDisposable
     {
         using var provider = CreateProvider();
         var configHandler = provider.GetRequiredService<MainConfigHandler>();
-        configHandler.Data.RollCallSettings.DefaultClass = "draw-class";
-        configHandler.Data.RollCallSettings.DrawMode = DrawMode.Repeat;
-        configHandler.Data.RollCallSettings.DrawType = DrawType.Random;
+        configHandler.Data.DefaultDrawSettings.DefaultClass = "draw-class";
+        configHandler.Data.DefaultDrawSettings.DrawMode = DrawMode.Repeat;
+        configHandler.Data.DefaultDrawSettings.DrawType = DrawType.Random;
         configHandler.Save();
 
         var profile = provider.GetRequiredService<IProfileService>();
@@ -155,7 +155,7 @@ public sealed class CoreRuntimeServicesTests : IDisposable
     {
         using var provider = CreateProvider();
         var config = provider.GetRequiredService<MainConfigHandler>();
-        config.Data.RollCallSettings.DefaultClass = "history-class";
+        config.Data.DefaultDrawSettings.DefaultClass = "history-class";
         config.Data.LotterySettings.DefaultPool = "history-pool";
         config.Save();
 
@@ -179,9 +179,9 @@ public sealed class CoreRuntimeServicesTests : IDisposable
     {
         using var provider = CreateProvider();
         var config = provider.GetRequiredService<MainConfigHandler>();
-        config.Data.RollCallSettings.DefaultClass = "session-class";
-        config.Data.RollCallSettings.DrawMode = DrawMode.Repeat;
-        config.Data.RollCallSettings.DrawType = DrawType.Fair;
+        config.Data.DefaultDrawSettings.DefaultClass = "session-class";
+        config.Data.DefaultDrawSettings.DrawMode = DrawMode.Repeat;
+        config.Data.DefaultDrawSettings.DrawType = DrawType.Fair;
         config.Save();
 
         var profile = provider.GetRequiredService<IProfileService>();

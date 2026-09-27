@@ -261,8 +261,6 @@ public sealed class MusicLibraryService(
     private IEnumerable<DrawSettingsConfigBase> GetAllDrawSettings()
     {
         yield return configHandler.Data.DefaultDrawSettings;
-        yield return configHandler.Data.RollCallSettings;
-        yield return configHandler.Data.QuickDrawSettings;
         yield return configHandler.Data.LotterySettings;
     }
 

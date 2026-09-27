@@ -136,7 +136,7 @@ public sealed partial class FirstRunOobeViewModel : ViewModelBase, IDisposable
             return;
 
         _profileService.LoadStudentProfile(value, saveCurrent: false);
-        _configHandler.Data.RollCallSettings.DefaultClass = value;
+        _configHandler.Data.DefaultDrawSettings.DefaultClass = value;
         _configHandler.Save();
         OnPropertyChanged(nameof(SelectedStudentListCount));
     }
@@ -253,7 +253,7 @@ public sealed partial class FirstRunOobeViewModel : ViewModelBase, IDisposable
         RefreshListSelector(
             StudentListNames,
             _catalogManager.GetStudentListNames(),
-            _configHandler.Data.RollCallSettings.DefaultClass,
+            _configHandler.Data.DefaultDrawSettings.DefaultClass,
             name => _catalogManager.CreateStudentList(name),
             name => SelectedStudentListName = name);
         RefreshListSelector(
