@@ -73,7 +73,7 @@ namespace SecRandom.Langs.SettingsPages.Personalized.Appearance {
         ///第一小组 张三 第二小组 李四 第三小组 王五 第四小组 赵六
         ///the quick brown fox jumps over a lazy dog
         ///THE QUICK BROWN FOX JUMPS OVER A LAZY DOG
-        ///点名 闪抽 抽奖 人脸抽 1234567890 +-*/.
+        ///点名 闪抽 抽奖 1234567890 +-*/.
         /// </summary>
         public static string C_Font_Preview_Text {
             get {

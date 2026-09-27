@@ -109,7 +109,7 @@
 第一分组 张三 第二分组 李四 第三分组 王五 第四分组 赵六
 the quick brown fox jumps over a lazy dog
 THE QUICK BROWN FOX JUMPS OVER A LAZY DOG
-点名 闪抽 抽奖 人脸抽 1234567890 +-*/</value>
+点名 闪抽 抽奖 1234567890 +-*/</value>
     </data>
     <data name="O_ThemeColorMode_System" xml:space="preserve">
         <value>跟随系统</value>

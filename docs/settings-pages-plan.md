@@ -35,7 +35,6 @@
     - 点名抽取设置 RollCall
     - 闪抽抽取设置 QuickDraw
     - 抽奖抽取设置 Lottery
-    - 人脸抽取设置 FaceDetector
 
 
 - 提醒设置 Notification `alpha2`
