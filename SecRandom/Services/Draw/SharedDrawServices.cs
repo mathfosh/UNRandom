@@ -81,9 +81,8 @@ public sealed class RollCallDrawService(
             count,
             snapshot.Remaining,
             DrawSettingsType.RollCall,
-            DrawProofExportContext.ForStudents(GetListName(), request.Group, request.Gender, request.CourseName),
-            courseName: request.CourseName,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            request.CourseName,
+            cancellationToken).ConfigureAwait(false);
         var weights = outcome.Winners.ToDictionary(student => student, student =>
         {
             ProfileRecordIdentity.EnsureRecordId(student);
@@ -99,7 +98,7 @@ public sealed class RollCallDrawService(
             (int)configHandler.Data.RollCallSettings.DrawType,
             weights,
             request.CourseName));
-        return new RollCallDrawResult(outcome.Winners, outcome.Proof.ProofId, drawRoundId, outcome.FrozenWeights);
+        return new RollCallDrawResult(outcome.Winners, outcome.ProofId, drawRoundId, outcome.FrozenWeights);
     }
 
     public void Reset(string group, string gender) => temporaryRecords.ClearStudentScope(GetListName(), gender, group);
@@ -208,14 +207,12 @@ public sealed class LotteryDrawService(
         if (hasStudentAssignment && snapshot.EligibleStudents.Count < count)
             return null;
         var prizes = await verification.DrawPrizesAsync(count,
-            temporaryRecords.GetPrizeCounts(GetPrizePoolName()), snapshot.Prizes,
-            DrawProofExportContext.ForPrizes(GetPrizePoolName()), cancellationToken).ConfigureAwait(false);
+            temporaryRecords.GetPrizeCounts(GetPrizePoolName()), snapshot.Prizes, cancellationToken).ConfigureAwait(false);
         IReadOnlyList<Student> assigned = [];
         if (hasStudentAssignment)
         {
             assigned = (await verification.DrawStudentsAsync(count, snapshot.EligibleStudents, DrawSettingsType.RollCall,
-                DrawProofExportContext.ForStudents(GetStudentListName(), request.Group, request.Gender, request.CourseName),
-                prizes.Proof.ProofId, request.CourseName, cancellationToken).ConfigureAwait(false)).Winners;
+                request.CourseName, cancellationToken).ConfigureAwait(false)).Winners;
             if (assigned.Count != prizes.Winners.Count)
                 return null;
         }
@@ -232,7 +229,7 @@ public sealed class LotteryDrawService(
             (int)configHandler.Data.LotterySettings.DrawType,
             (int)configHandler.Data.RollCallSettings.DrawType,
             request.CourseName));
-        return new LotteryDrawResult(prizes.Winners, assigned, prizes.Proof.ProofId, roundId);
+        return new LotteryDrawResult(prizes.Winners, assigned, prizes.ProofId, roundId);
     }
 
     public void Reset(string studentListName, string group, string gender)

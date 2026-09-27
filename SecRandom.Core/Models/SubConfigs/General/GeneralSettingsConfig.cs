@@ -8,8 +8,6 @@ public partial class GeneralSettingsConfig : ObservableObject
     [ObservableProperty] private BasicSettingsConfig _basic = new();
     [ObservableProperty] private BackupConfig _backup = new();
     [ObservableProperty] private CrashRecoverySettingsConfig _crashRecovery = new();
-    [ObservableProperty] private ProofRetentionConfig _proofRetention = new();
-    [ObservableProperty] private VerificationSettingsConfig _verification = new();
 
     public void ApplyLegacyBasic(BasicSettingsConfig? legacyBasic)
     {

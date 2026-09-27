@@ -26,7 +26,6 @@ public class SettingsSearchService
                 "S_Verification", "S_Verification_Password", "S_Verification_Totp", "S_Verification_UsbBinding",
                 "S_Protection_SensitiveOperations", "S_Protection_LinkageOperations"
             },
-            ["General.Verification"] = new HashSet<string> { "S_Verification" },
             ["HistoryManagement"] = new HashSet<string>
             {
                 "S_History", "S_History_ShowRollCall", "S_History_ShowLottery", "S_History_SelectWeight",

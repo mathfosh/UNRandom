@@ -21,7 +21,6 @@ public class SettingsMarkupTests
     }
 
     [Theory]
-    [InlineData("SecRandom/Views/SettingsPages/General/VerificationSettingsPage.axaml", "S_VerificationMode")]
     [InlineData("SecRandom/Views/SettingsPages/General/BackupSettingsPage.axaml", "S_Includes")]
     [InlineData("SecRandom/Views/SettingsPages/More/MoreSettingsPage.axaml", "S_Shortcut_Enable")]
     [InlineData("SecRandom/Views/SettingsPages/Picking/DefaultDrawSettingsPage.axaml", "S_AnimationStyle")]

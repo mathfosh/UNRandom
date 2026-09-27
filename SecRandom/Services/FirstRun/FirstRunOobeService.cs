@@ -7,7 +7,6 @@ public sealed class FirstRunOobeService(MainConfigHandler configHandler)
 {
     public const int CurrentPrivacyPolicyVersion = 1;
     public const int CurrentGplVersion = 1;
-    public const int CurrentVerificationNoticeVersion = 1;
 
     public bool IsRequired()
     {
@@ -19,8 +18,7 @@ public sealed class FirstRunOobeService(MainConfigHandler configHandler)
         var basic = configHandler.Data.General.Basic;
         return basic.GuideCompleted &&
                 (Math.Max(basic.AcceptedGplVersion, basic.AcceptedEulaVersion) < CurrentGplVersion ||
-                  basic.AcceptedPrivacyPolicyVersion < CurrentPrivacyPolicyVersion ||
-                  basic.AcceptedVerificationNoticeVersion < CurrentVerificationNoticeVersion);
+                  basic.AcceptedPrivacyPolicyVersion < CurrentPrivacyPolicyVersion);
     }
 
     public void Complete()
@@ -29,7 +27,6 @@ public sealed class FirstRunOobeService(MainConfigHandler configHandler)
         basic.AcceptedEulaVersion = CurrentGplVersion;
         basic.AcceptedPrivacyPolicyVersion = CurrentPrivacyPolicyVersion;
         basic.AcceptedGplVersion = CurrentGplVersion;
-        basic.AcceptedVerificationNoticeVersion = CurrentVerificationNoticeVersion;
         basic.GuideCompleted = true;
         configHandler.Save();
     }

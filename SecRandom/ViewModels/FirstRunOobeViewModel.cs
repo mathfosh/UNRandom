@@ -33,7 +33,6 @@ public sealed partial class FirstRunOobeViewModel : ViewModelBase, IDisposable
     private MoreSettingsConfig? _moreSettings;
 
     [ObservableProperty] private int _selectedStep;
-    [ObservableProperty] private bool _acceptedVerificationNotice;
     [ObservableProperty] private bool _acceptedPrivacyPolicy;
     [ObservableProperty] private bool _acceptedGpl;
     [ObservableProperty] private string _selectedStudentListName = string.Empty;
@@ -70,8 +69,6 @@ public sealed partial class FirstRunOobeViewModel : ViewModelBase, IDisposable
     public int SelectedPrizeListCount => _profileService.CurrentPrizeList?.Prizes.Count ?? 0;
     public bool IsPrivacyPolicyOnly => _oobeService.IsPrivacyPolicyOnlyRequired();
     public bool IsFullSetup => !IsPrivacyPolicyOnly;
-    public bool IsVerificationNoticeRequired => !IsPrivacyPolicyOnly ||
-                                                Basic.AcceptedVerificationNoticeVersion < FirstRunOobeService.CurrentVerificationNoticeVersion;
     public bool IsWelcomeStep => !IsPrivacyPolicyOnly && SelectedStep == 0;
     public bool HasPrevious => !IsPrivacyPolicyOnly && SelectedStep > 0;
     public bool IsStatusVisible => HasPrevious || IsPrivacyPolicyOnly;
@@ -81,9 +78,7 @@ public sealed partial class FirstRunOobeViewModel : ViewModelBase, IDisposable
     public string StepProgress => IsPrivacyPolicyOnly
         ? LR.C_LegalTitle
         : string.Format(LR.M_StepProgress, SelectedStep, StepCount - 1);
-    public bool CanContinue => !IsPrivacyPolicyStep ||
-                               (AcceptedPrivacyPolicy && AcceptedGpl &&
-                                (!IsVerificationNoticeRequired || AcceptedVerificationNotice));
+    public bool CanContinue => !IsPrivacyPolicyStep || (AcceptedPrivacyPolicy && AcceptedGpl);
     public bool IsPrivacyPolicyStep => IsPrivacyPolicyOnly || SelectedStep == 1;
     public int StepCount => 6;
     public string PageTitle => IsPrivacyPolicyOnly ? LR.C_LegalTitle : LR.C_Title;
@@ -101,7 +96,6 @@ public sealed partial class FirstRunOobeViewModel : ViewModelBase, IDisposable
         StatusMessage = string.Empty;
         OnPropertyChanged(nameof(IsPrivacyPolicyOnly));
         OnPropertyChanged(nameof(IsFullSetup));
-        OnPropertyChanged(nameof(IsVerificationNoticeRequired));
         OnPropertyChanged(nameof(IsPrivacyPolicyStep));
         OnPropertyChanged(nameof(IsStatusVisible));
         OnPropertyChanged(nameof(IsCompletionActionVisible));
@@ -135,7 +129,6 @@ public sealed partial class FirstRunOobeViewModel : ViewModelBase, IDisposable
 
     partial void OnAcceptedPrivacyPolicyChanged(bool value) => OnPropertyChanged(nameof(CanContinue));
     partial void OnAcceptedGplChanged(bool value) => OnPropertyChanged(nameof(CanContinue));
-    partial void OnAcceptedVerificationNoticeChanged(bool value) => OnPropertyChanged(nameof(CanContinue));
 
     partial void OnSelectedStudentListNameChanged(string value)
     {
@@ -181,7 +174,7 @@ public sealed partial class FirstRunOobeViewModel : ViewModelBase, IDisposable
 
     public async Task<bool> FinishAsync()
     {
-        if (!AcceptedPrivacyPolicy || !AcceptedGpl || (IsVerificationNoticeRequired && !AcceptedVerificationNotice))
+        if (!AcceptedPrivacyPolicy || !AcceptedGpl)
         {
             if (!IsPrivacyPolicyOnly)
                 SelectedStep = 1;
@@ -235,7 +228,6 @@ public sealed partial class FirstRunOobeViewModel : ViewModelBase, IDisposable
         OnPropertyChanged(nameof(Basic));
         OnPropertyChanged(nameof(IsPrivacyPolicyOnly));
         OnPropertyChanged(nameof(IsFullSetup));
-        OnPropertyChanged(nameof(IsVerificationNoticeRequired));
         OnPropertyChanged(nameof(IsPrivacyPolicyStep));
         OnPropertyChanged(nameof(IsStatusVisible));
         OnPropertyChanged(nameof(IsCompletionActionVisible));

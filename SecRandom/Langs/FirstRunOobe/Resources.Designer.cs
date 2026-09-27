@@ -57,12 +57,6 @@ namespace SecRandom.Langs.FirstRunOobe {
             }
         }
         
-        public static string VerificationNotice {
-            get {
-                return ResourceManager.GetString("VerificationNotice", resourceCulture);
-            }
-        }
-        
         public static string C_Title {
             get {
                 return ResourceManager.GetString("C_Title", resourceCulture);
@@ -126,18 +120,6 @@ namespace SecRandom.Langs.FirstRunOobe {
         public static string C_GplAccept {
             get {
                 return ResourceManager.GetString("C_GplAccept", resourceCulture);
-            }
-        }
-        
-        public static string C_VerificationNoticeTitle {
-            get {
-                return ResourceManager.GetString("C_VerificationNoticeTitle", resourceCulture);
-            }
-        }
-        
-        public static string C_VerificationNoticeAccept {
-            get {
-                return ResourceManager.GetString("C_VerificationNoticeAccept", resourceCulture);
             }
         }
         

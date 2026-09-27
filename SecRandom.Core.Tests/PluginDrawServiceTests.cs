@@ -113,9 +113,6 @@ public sealed class PluginDrawServiceTests : IDisposable
         services.AddLogging(builder => builder.SetMinimumLevel(LogLevel.None));
         services.AddCoreRuntimeServices();
         services.AddSingleton<IVerificationKernel, ManagedVerificationKernel>();
-        services.AddSingleton<IWitnessClient>(_ => new StubWitnessClient());
-        services.AddSingleton<DrawProofExportService>();
-        services.AddSingleton<DrawProofAttestationService>();
         services.AddSingleton<CsesScheduleParser>();
         services.AddSingleton<ICsesScheduleStore, CsesScheduleStore>();
         services.AddSingleton<CsesScheduleSource>();
@@ -145,19 +142,6 @@ public sealed class PluginDrawServiceTests : IDisposable
     {
         return typeof(Utils).GetMethod(name, BindingFlags.Static | BindingFlags.NonPublic)
                ?? throw new InvalidOperationException($"Utils.{name} was not found.");
-    }
-
-    private sealed class StubWitnessClient : IWitnessClient
-    {
-        public Task<string> AttestAsync(DrawProof proof, CancellationToken cancellationToken)
-        {
-            return Task.FromResult("attested");
-        }
-
-        public Task<DrawProof> NotarizeAsync(FormalNotarizationRequest request, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(new DrawProof());
-        }
     }
 
     private sealed class StubSecurityService(bool allow) : ISecurityService

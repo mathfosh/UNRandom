@@ -234,8 +234,7 @@ public sealed partial class QuickDrawPageViewModel : ViewModelBase, IDisposable
                 count,
                 candidates,
                 DrawSettingsType.QuickDraw,
-                DrawProofExportContext.ForStudents(SelectedStudentListName, courseName: courseName),
-                courseName: courseName,
+                courseName,
                 cancellationToken: default);
             var previewTask = skipPreview
                 ? Task.CompletedTask

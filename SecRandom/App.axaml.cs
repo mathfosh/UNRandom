@@ -1007,13 +1007,7 @@ public partial class App : Application
                     services.AddSingleton<TimerViewModel>();
                     services.AddSingleton<TimerViewService>();
                 }
-                services.AddSingleton<DrawProofExportService>();
                 services.AddSingleton<IVerificationKernel, ManagedVerificationKernel>();
-                services.AddHttpClient<IWitnessClient, WitnessClient>(client =>
-                    client.Timeout = TimeSpan.FromSeconds(3));
-                services.AddSingleton<DrawProofAttestationService>();
-                services.AddHostedService(serviceProvider =>
-                    serviceProvider.GetRequiredService<DrawProofAttestationService>());
                 services.AddTransient<VerificationDrawCoordinator>();
                 services.AddSingleton<SettingsSearchService>();
                 services.AddSingleton<FirstRunOobeService>();
@@ -1140,8 +1134,6 @@ public partial class App : Application
                     // 手机没有安全服务支持
                     services.AddSettingsPage<SecuritySettingsPage>(Langs.Common.Resources.Settings_Security);
                 }
-                services.AddSettingsPage<VerificationSettingsPage>(Langs.SettingsPages.General.Verification
-                    .Resources.Page_Title);
                 services.AddSettingsPage<BackupSettingsPage>(Langs.Common.Resources.Settings_Backup);
 
                 services.AddGroup(new PageGroupInfo(

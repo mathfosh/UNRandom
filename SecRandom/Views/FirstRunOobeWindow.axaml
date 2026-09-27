@@ -99,17 +99,6 @@
                         <TextBlock Text="{x:Static langs:Resources.C_LegalDescription}"
                                    TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         
-                        <Expander Header="{x:Static langs:Resources.C_VerificationNoticeTitle}"
-                                  IsExpanded="False"
-                                  IsVisible="{Binding ViewModel.IsVerificationNoticeRequired}">
-                            <ScrollViewer MinHeight="150" MaxHeight="240">
-                                <SelectableTextBlock Text="{x:Static langs:Resources.VerificationNotice}"
-                                                     TextWrapping="Wrap" />
-                            </ScrollViewer>
-                        </Expander>
-                        <CheckBox IsChecked="{Binding ViewModel.AcceptedVerificationNotice}"
-                                  Content="{x:Static langs:Resources.C_VerificationNoticeAccept}"
-                                  IsVisible="{Binding ViewModel.IsVerificationNoticeRequired}" />
                         
                         <Expander Header="{x:Static langs:Resources.C_PrivacyPolicyTitle}" IsExpanded="False">
                             <ScrollViewer MinHeight="150" MaxHeight="240">
