@@ -218,6 +218,10 @@
                         </WrapPanel>
                     </fa:FASettingsExpanderItem.Footer>
                 </fa:FASettingsExpanderItem>
+
+                <fa:FASettingsExpanderItem x:Name="S_Fork_Maintainer"
+                                            Content="{x:Static lsa:Resources.S_Fork_Maintainer}"
+                                            Description="{x:Static lsa:Resources.S_Fork_Maintainer_D}" />
             </fa:FASettingsExpander>
 
             <fa:FASettingsExpander x:Name="S_Author"

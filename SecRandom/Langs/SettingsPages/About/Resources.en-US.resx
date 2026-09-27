@@ -54,6 +54,12 @@
     <data name="S_Author_Org_D" xml:space="preserve">
         <value>SecRandom's Affiliated Organization</value>
     </data>
+  <data name="S_Fork_Maintainer" xml:space="preserve">
+    <value>This build maintained by</value>
+  </data>
+  <data name="S_Fork_Maintainer_D" xml:space="preserve">
+    <value>Derived from SecRandom, maintained by 李骏健</value>
+  </data>
     <data name="S_App_License" xml:space="preserve">
         <value>Program License</value>
     </data>

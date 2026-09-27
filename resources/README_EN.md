@@ -20,12 +20,17 @@
 
 </div>
 
+> [!IMPORTANT]
+> This repository is a derivative of [SecRandom](https://github.com/SECTL/SecRandom), maintained by **Li Junjian (@mathfosh)**.
+> The original project is developed by SECTL, authored by 黎泽懿_Aionflux, and licensed under GNU GPLv3.
+> This build removes telemetry, lottery, and update features.
+
 > [!NOTE]
 > SecRandom is released under GNU GPLv3. You may modify and redistribute the source, but derivative redistributions must also use GNU GPLv3.
 
-## SecRandom
+## UNrandom
 
-SecRandom is a fair random-selection application for classrooms, teams, events, decision-making, and other scenarios.
+UNrandom is a fair random-selection application for classrooms, teams, events, decision-making, and other scenarios.
 
 ## Features
 
@@ -33,7 +38,6 @@ SecRandom is a fair random-selection application for classrooms, teams, events, 
 
 - **Roll call**: Supports standard random, history-balanced, and repeat-control draws.
 - **Quick draw**: Quickly draws students through a standalone floating window.
-- **Lottery**: Supports prize-wheel and inventory draws, with students and prizes managed independently.
 - **Rich presentation**: Provides unified settings for animation, results, speech, music, and notifications, with fallback when a notification fails.
 
 ### Fairness and list management

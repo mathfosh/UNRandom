@@ -258,6 +258,18 @@ namespace SecRandom.Langs.SettingsPages.About {
             }
         }
 
+        public static string S_Fork_Maintainer {
+            get {
+                return ResourceManager.GetString("S_Fork_Maintainer", resourceCulture);
+            }
+        }
+
+        public static string S_Fork_Maintainer_D {
+            get {
+                return ResourceManager.GetString("S_Fork_Maintainer_D", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to 黎泽懿_Aionflux.
         /// </summary>

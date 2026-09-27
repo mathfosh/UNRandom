@@ -8,7 +8,7 @@
 #ifndef MyAppVersion
 #define MyAppVersion "APP_VERSION"
 #endif
-#define MyAppPublisher "SECTL Studio"
+#define MyAppPublisher "李骏健"
 #define MyAppExeName "UNrandom.Desktop.exe"
 #define MyAppURL "https://secrandom.sectl.cn/"
 #ifndef MyAppOutDir
