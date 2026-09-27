@@ -7,7 +7,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](LICENSE)
 
 > [!IMPORTANT]
-> 本仓库是 [SecRandom](https://github.com/SECTL/SecRandom) 的衍生版本，由 **李骏健（@mathfosh）** 维护。
+> 本仓库是 [SecRandom](https://github.com/SECTL/SecRandom) 的衍生版本，由 **（@mathfosh）** 维护。
 > 原项目由 SECTL 思拓创联开发，原作者 黎泽懿_Aionflux，遵循 GNU GPLv3。
 > 本版本移除了遥测上报、抽奖与更新功能，并调整了抽取设置页。
 
